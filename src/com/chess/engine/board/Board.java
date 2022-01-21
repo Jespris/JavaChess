@@ -57,7 +57,7 @@ public class Board {
         return ImmutableList.copyOf(activePieces);
     }
 
-    private static List<Tile> createGameBoard(final Builder builder){
+    public static List<Tile> createGameBoard(final Builder builder){
         final Tile[] tiles = new Tile[BoardUtils.NUM_TILES];
         for (int i = 0; i < BoardUtils.NUM_TILES; i++){
             tiles[i] = Tile.createTile(i, builder.boardConfig.get(i));
@@ -65,7 +65,7 @@ public class Board {
         return ImmutableList.copyOf(tiles);
     }
 
-    private static Board createStandardBoard(){
+    public static Board createStandardBoard(){
         final Builder builder = new Builder();
         // Black pieces:
         builder.setPiece(new Rook(0, Alliance.BLACK));
@@ -115,6 +115,7 @@ public class Board {
         Alliance nextMoveMaker;
 
         public Builder() {
+            this.boardConfig = new HashMap<>();
         }
 
         public Builder setPiece(final Piece piece){

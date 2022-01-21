@@ -27,13 +27,13 @@ public class King extends Piece{
 
         for (final int kingVector: KING_VECTORS){
             final int destination = this.piecePosition + kingVector;
-
-            if (isFirstColumnExclusion(destination, kingVector) || isEightColumnExclusion(destination, kingVector)){
-                continue;
-            }
-
             if (BoardUtils.isValidTileCoordinate(destination)){
+
                 final Tile destinationTile = board.getTile(destination);
+
+                if (isFirstColumnExclusion(destination, kingVector) || isEightColumnExclusion(destination, kingVector)){
+                    continue;
+                }
 
                 if (!destinationTile.isTileOccupied()) {
                     legalMoves.add(new MajorMove(board, this, this.piecePosition, destination));
