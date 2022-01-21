@@ -32,4 +32,11 @@ public abstract class Move {
             this.attackedPiece = attackedPiece;
         }
     }
+
+    public static final class PawnMove extends Move{
+
+        public PawnMove(Board board, Piece pieceMoved, int startCoordinate, int endCoordinate) {
+            super(board, pieceMoved, startCoordinate, endCoordinate);
+        }
+    }
 }

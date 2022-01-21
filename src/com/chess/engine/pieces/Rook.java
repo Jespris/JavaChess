@@ -16,7 +16,7 @@ import java.util.List;
 public class Rook extends Piece{
     private final static int[] ROOK_VECTORS = {-8, -1, 1, 8};
 
-    Rook(int piecePosition, Alliance pieceAlliance) {
+    public Rook(int piecePosition, Alliance pieceAlliance) {
         super(piecePosition, pieceAlliance);
     }
 
@@ -54,6 +54,11 @@ public class Rook extends Piece{
             }
         }
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public String toString(){
+        return PieceType.ROOK.toString();
     }
 
     // Some rook vectors are wrong at the edge of the boards, exclude those when adding legal moves

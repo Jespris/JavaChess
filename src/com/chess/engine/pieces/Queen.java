@@ -16,7 +16,7 @@ import java.util.List;
 public class Queen extends Piece{
     private final static int[] QUEEN_VECTORS = {-9, -8, -7, -1, 1, 7, 8, 9};
 
-    Queen(int piecePosition, Alliance pieceAlliance) {
+    public Queen(int piecePosition, Alliance pieceAlliance) {
         super(piecePosition, pieceAlliance);
     }
 
@@ -56,7 +56,12 @@ public class Queen extends Piece{
         return ImmutableList.copyOf(legalMoves);
     }
 
-    // Some rook vectors are wrong at the edge of the boards, exclude those when adding legal moves
+    @Override
+    public String toString(){
+        return PieceType.QUEEN.toString();
+    }
+
+    // Some queen vectors are wrong at the edge of the boards, exclude those when adding legal moves
     private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset){
         return BoardUtils.FIRST_COLUMN[currentPosition] && (candidateOffset == -1 || candidateOffset == -9 || candidateOffset == 7);
     }

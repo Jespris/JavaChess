@@ -16,7 +16,7 @@ import java.util.List;
 public class Bishop extends Piece{
     private final static int[] BISHOP_VECTORS = {-9, -7, 7, 9};
 
-    Bishop(int piecePosition, Alliance pieceAlliance) {
+    public Bishop(int piecePosition, Alliance pieceAlliance) {
         super(piecePosition, pieceAlliance);
     }
 
@@ -54,6 +54,11 @@ public class Bishop extends Piece{
             }
         }
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public String toString(){
+        return PieceType.BISHOP.toString();
     }
 
     // Some bishop vectors are wrong at the edge of the boards, exclude those when adding legal moves

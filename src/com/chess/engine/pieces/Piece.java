@@ -10,10 +10,13 @@ import java.util.List;
 public abstract class Piece {
     protected final int piecePosition;
     protected final Alliance pieceAlliance;
+    protected final boolean isFirstMove;
 
     Piece(final int piecePosition, final Alliance pieceAlliance){
         this.piecePosition = piecePosition;
         this.pieceAlliance = pieceAlliance;
+        // TODO: more work here!
+        this.isFirstMove = false;
     }
 
     // Unspecified return collection (e.g. can be list)
@@ -21,5 +24,34 @@ public abstract class Piece {
 
     public Alliance getPieceAlliance(){
         return this.pieceAlliance;
+    }
+
+    public boolean isFirstMove(){
+        return this.isFirstMove;
+    }
+
+    public int getPiecePosition(){
+        return this.piecePosition;
+    }
+
+    public enum PieceType {
+
+        PAWN("P"),
+        ROOK("R"),
+        KNIGHT("N"),
+        BISHOP("B"),
+        QUEEN("Q"),
+        KING("K");
+
+        private String pieceName;
+
+        PieceType(final String pieceName){
+            this.pieceName = pieceName;
+        }
+
+        @Override
+        public String toString(){
+            return this.pieceName;
+        }
     }
 }

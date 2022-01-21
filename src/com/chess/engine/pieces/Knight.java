@@ -16,7 +16,7 @@ public class Knight extends Piece{
 
     private final static int[] knightJumps = {-17, -15, -10, -6, 6, 10, 15, 17};
 
-    Knight(final int piecePosition, final Alliance pieceAlliance) {
+    public Knight(final int piecePosition, final Alliance pieceAlliance) {
         super(piecePosition, pieceAlliance);
     }
 
@@ -54,6 +54,11 @@ public class Knight extends Piece{
             }
         }
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public String toString(){
+        return PieceType.KNIGHT.toString();
     }
 
     // Some knight-jump offsets are wrong at the edge of the boards, exclude those when adding legal moves
