@@ -17,7 +17,7 @@ public class Bishop extends Piece{
     private final static int[] BISHOP_VECTORS = {-9, -7, 7, 9};
 
     public Bishop(int piecePosition, Alliance pieceAlliance) {
-        super(piecePosition, pieceAlliance);
+        super(PieceType.BISHOP, piecePosition, pieceAlliance);
     }
 
     @Override
