@@ -22,6 +22,7 @@ public class Board {
 
     private Board(final Builder builder){
         this.gameBoard = createGameBoard(builder);
+
         this.whitePieces = calculateActivePieces(this.gameBoard, Alliance.WHITE);
         this.blackPieces = calculateActivePieces(this.gameBoard, Alliance.BLACK);
 
@@ -31,7 +32,7 @@ public class Board {
         this.whitePlayer = new WhitePlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
         this.blackPlayer = new BlackPlayer(this, blackStandardLegalMoves, whiteStandardLegalMoves);
 
-        this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
+        this.currentPlayer = builder.nextMoveMaker.choosePlayerByAlliance(this.whitePlayer, this.blackPlayer);
     }
 
     @Override
@@ -134,6 +135,9 @@ public class Board {
         builder.setPiece(new Pawn(54, Alliance.WHITE));
         builder.setPiece(new Pawn(55, Alliance.WHITE));
 
+        // white to move first
+        builder.setMoveMaker(Alliance.WHITE);
+
         return builder.build();
     }
 
@@ -151,7 +155,7 @@ public class Board {
         Alliance nextMoveMaker;
 
         public Builder() {
-            this.boardConfig = new HashMap<>();
+            this.boardConfig = new HashMap<>(32, 1.0f);
         }
 
         public Builder setPiece(final Piece piece){

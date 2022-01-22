@@ -10,7 +10,6 @@ import com.chess.engine.pieces.Piece;
 import com.chess.engine.pieces.Piece.PieceType;
 import com.chess.engine.pieces.Rook;
 import com.google.common.collect.ImmutableList;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.Collection;
