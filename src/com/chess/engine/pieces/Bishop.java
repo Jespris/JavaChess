@@ -16,7 +16,7 @@ import java.util.List;
 public class Bishop extends Piece{
     private final static int[] BISHOP_VECTORS = {-9, -7, 7, 9};
 
-    public Bishop(int piecePosition, Alliance pieceAlliance) {
+    public Bishop(final int piecePosition, final Alliance pieceAlliance) {
         super(PieceType.BISHOP, piecePosition, pieceAlliance);
     }
 
@@ -38,14 +38,14 @@ public class Bishop extends Piece{
                     final Tile destinationTile = board.getTile(candidateDestinationCoordinate);
 
                     if (!destinationTile.isTileOccupied()) {
-                        legalMoves.add(new MajorMove(board, this, this.piecePosition, candidateDestinationCoordinate));
+                        legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
                     } else {
 
                         final Piece pieceOnTile = destinationTile.getPiece();
                         final Alliance pieceOnTileAlliance = pieceOnTile.getPieceAlliance();
 
                         if (this.pieceAlliance != pieceOnTileAlliance) {
-                            legalMoves.add(new AttackMove(board, this, this.piecePosition, candidateDestinationCoordinate, pieceOnTile));
+                            legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceOnTile));
                         }
                         break;
                     }
@@ -54,6 +54,11 @@ public class Bishop extends Piece{
             }
         }
         return ImmutableList.copyOf(legalMoves);
+    }
+
+    @Override
+    public Bishop movePiece(final Move move) {
+        return new Bishop(move.getDestination(), move.getPieceMoved().getPieceAlliance());
     }
 
     @Override

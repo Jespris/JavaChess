@@ -41,14 +41,14 @@ public class Knight extends Piece{
                 final Tile destinationTile = board.getTile(destination);
 
                 if (!destinationTile.isTileOccupied()){
-                    legalMoves.add(new MajorMove(board, this, this.piecePosition, destination));
+                    legalMoves.add(new MajorMove(board, this, destination));
                 } else {
 
                     final Piece pieceOnTile = destinationTile.getPiece();
                     final Alliance pieceOnTileAlliance = pieceOnTile.getPieceAlliance();
 
                     if (this.pieceAlliance != pieceOnTileAlliance){
-                        legalMoves.add(new AttackMove(board, this, this.piecePosition, destination, pieceOnTile));
+                        legalMoves.add(new AttackMove(board, this, destination, pieceOnTile));
                     }
                 }
             }
@@ -59,6 +59,11 @@ public class Knight extends Piece{
     @Override
     public String toString(){
         return PieceType.KNIGHT.toString();
+    }
+
+    @Override
+    public Knight movePiece(final Move move) {
+        return new Knight(move.getDestination(), move.getPieceMoved().getPieceAlliance());
     }
 
     // Some knight-jump offsets are wrong at the edge of the boards, exclude those when adding legal moves

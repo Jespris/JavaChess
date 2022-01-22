@@ -16,7 +16,7 @@ import java.util.List;
 public class Rook extends Piece{
     private final static int[] ROOK_VECTORS = {-8, -1, 1, 8};
 
-    public Rook(int piecePosition, Alliance pieceAlliance) {
+    public Rook(final int piecePosition, final Alliance pieceAlliance) {
         super(PieceType.ROOK, piecePosition, pieceAlliance);
     }
 
@@ -38,14 +38,14 @@ public class Rook extends Piece{
                     final Tile destinationTile = board.getTile(candidateDestinationCoordinate);
 
                     if (!destinationTile.isTileOccupied()) {
-                        legalMoves.add(new MajorMove(board, this, this.piecePosition, candidateDestinationCoordinate));
+                        legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
                     } else {
 
                         final Piece pieceOnTile = destinationTile.getPiece();
                         final Alliance pieceOnTileAlliance = pieceOnTile.getPieceAlliance();
 
                         if (this.pieceAlliance != pieceOnTileAlliance) {
-                            legalMoves.add(new AttackMove(board, this, this.piecePosition, candidateDestinationCoordinate, pieceOnTile));
+                            legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceOnTile));
                         }
                         break;
                     }
@@ -59,6 +59,11 @@ public class Rook extends Piece{
     @Override
     public String toString(){
         return PieceType.ROOK.toString();
+    }
+
+    @Override
+    public Rook movePiece(final Move move) {
+        return new Rook(move.getDestination(), move.getPieceMoved().getPieceAlliance());
     }
 
     // Some rook vectors are wrong at the edge of the boards, exclude those when adding legal moves

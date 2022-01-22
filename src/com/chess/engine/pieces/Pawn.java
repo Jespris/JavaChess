@@ -35,7 +35,7 @@ public class Pawn extends Piece{
             if (pawnVector == 8 && !board.getTile(destination).isTileOccupied()){
                 // normal pawn move
                 // TODO: add pawn promotion with capture
-                legalMoves.add(new PawnMove(board, this, this.piecePosition, destination));
+                legalMoves.add(new PawnMove(board, this, destination));
 
             } else if (pawnVector == 16 &&
                     this.isFirstMove() &&
@@ -45,7 +45,7 @@ public class Pawn extends Piece{
                 final int behindDestinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() * 8);
                 if (!board.getTile(behindDestinationCoordinate).isTileOccupied() &&
                         !board.getTile(destination).isTileOccupied()){
-                    legalMoves.add(new PawnMove(board, this, this.piecePosition, destination));
+                    legalMoves.add(new PawnMove(board, this, destination));
                 }
             } else if (pawnVector == 7 &&
                     !((BoardUtils.EIGHT_COLUMN[this.piecePosition] && this.pieceAlliance.isWhite()) ||
@@ -55,7 +55,7 @@ public class Pawn extends Piece{
                 if (board.getTile(destination).isTileOccupied()){
                     final Piece pieceOnTile = board.getTile(destination).getPiece();
                     if (this.pieceAlliance != pieceOnTile.getPieceAlliance()){
-                        legalMoves.add(new AttackMove(board, this, this.piecePosition, destination, pieceOnTile));
+                        legalMoves.add(new AttackMove(board, this, destination, pieceOnTile));
                     }
                 }
             } else if (pawnVector == 9 &&
@@ -66,7 +66,7 @@ public class Pawn extends Piece{
                 if (board.getTile(destination).isTileOccupied()){
                     final Piece pieceOnTile = board.getTile(destination).getPiece();
                     if (this.pieceAlliance != pieceOnTile.getPieceAlliance()){
-                        legalMoves.add(new AttackMove(board, this, this.piecePosition, destination, pieceOnTile));
+                        legalMoves.add(new AttackMove(board, this, destination, pieceOnTile));
                     }
                 }
             }
@@ -77,5 +77,10 @@ public class Pawn extends Piece{
     @Override
     public String toString(){
         return PieceType.PAWN.toString();
+    }
+
+    @Override
+    public Pawn movePiece(final Move move) {
+        return new Pawn(move.getDestination(), move.getPieceMoved().getPieceAlliance());
     }
 }

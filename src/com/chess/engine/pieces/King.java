@@ -17,7 +17,7 @@ public class King extends Piece{
 
     private final static int[] KING_VECTORS = {-9, -8, -7, -1, 1, 7, 8, 9};
 
-    public King(int piecePosition, Alliance pieceAlliance) {
+    public King(final int piecePosition, final Alliance pieceAlliance) {
         super(PieceType.KING, piecePosition, pieceAlliance);
     }
 
@@ -36,14 +36,14 @@ public class King extends Piece{
                 }
 
                 if (!destinationTile.isTileOccupied()) {
-                    legalMoves.add(new MajorMove(board, this, this.piecePosition, destination));
+                    legalMoves.add(new MajorMove(board, this, destination));
                 } else {
 
                     final Piece pieceOnTile = destinationTile.getPiece();
                     final Alliance pieceOnTileAlliance = pieceOnTile.getPieceAlliance();
 
                     if (this.pieceAlliance != pieceOnTileAlliance) {
-                        legalMoves.add(new AttackMove(board, this, this.piecePosition, destination, pieceOnTile));
+                        legalMoves.add(new AttackMove(board, this, destination, pieceOnTile));
                     }
                 }
             }
@@ -54,6 +54,11 @@ public class King extends Piece{
     @Override
     public String toString(){
         return PieceType.KING.toString();
+    }
+
+    @Override
+    public King movePiece(final Move move) {
+        return new King(move.getDestination(), move.getPieceMoved().getPieceAlliance());
     }
 
     // Some king vectors are wrong at the edge of the boards, exclude those when adding legal moves

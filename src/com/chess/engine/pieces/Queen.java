@@ -16,7 +16,7 @@ import java.util.List;
 public class Queen extends Piece{
     private final static int[] QUEEN_VECTORS = {-9, -8, -7, -1, 1, 7, 8, 9};
 
-    public Queen(int piecePosition, Alliance pieceAlliance) {
+    public Queen(final int piecePosition, final Alliance pieceAlliance) {
         super(PieceType.QUEEN, piecePosition, pieceAlliance);
     }
 
@@ -38,14 +38,14 @@ public class Queen extends Piece{
                     final Tile destinationTile = board.getTile(candidateDestinationCoordinate);
 
                     if (!destinationTile.isTileOccupied()) {
-                        legalMoves.add(new MajorMove(board, this, this.piecePosition, candidateDestinationCoordinate));
+                        legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
                     } else {
 
                         final Piece pieceOnTile = destinationTile.getPiece();
                         final Alliance pieceOnTileAlliance = pieceOnTile.getPieceAlliance();
 
                         if (this.pieceAlliance != pieceOnTileAlliance) {
-                            legalMoves.add(new AttackMove(board, this, this.piecePosition, candidateDestinationCoordinate, pieceOnTile));
+                            legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceOnTile));
                         }
                         break;
                     }
@@ -60,6 +60,12 @@ public class Queen extends Piece{
     public String toString(){
         return PieceType.QUEEN.toString();
     }
+
+    @Override
+    public Queen movePiece(final Move move) {
+        return new Queen(move.getDestination(), move.getPieceMoved().getPieceAlliance());
+    }
+
 
     // Some queen vectors are wrong at the edge of the boards, exclude those when adding legal moves
     private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset){
