@@ -17,7 +17,12 @@ public class Bishop extends Piece{
     private final static int[] BISHOP_VECTORS = {-9, -7, 7, 9};
 
     public Bishop(final int piecePosition, final Alliance pieceAlliance) {
-        super(PieceType.BISHOP, piecePosition, pieceAlliance);
+        super(PieceType.BISHOP, piecePosition, pieceAlliance, true);
+    }
+
+    public Bishop(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove){
+        super(PieceType.ROOK, piecePosition, pieceAlliance, isFirstMove);
+
     }
 
     @Override

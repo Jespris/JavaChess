@@ -5,6 +5,8 @@ import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.AttackMove;
+import com.chess.engine.board.Move.PawnAttackMove;
+import com.chess.engine.board.Move.PawnJump;
 import com.chess.engine.board.Move.PawnMove;
 import com.google.common.collect.ImmutableList;
 import org.checkerframework.checker.units.qual.A;
@@ -18,7 +20,12 @@ public class Pawn extends Piece{
     private final static int[] PAWN_VECTORS = {7, 8, 9, 16};
 
     public Pawn(final int piecePosition, final Alliance pieceAlliance) {
-        super(PieceType.PAWN, piecePosition, pieceAlliance);
+        super(PieceType.PAWN, piecePosition, pieceAlliance, true);
+    }
+
+    public Pawn(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove){
+        super(PieceType.ROOK, piecePosition, pieceAlliance, isFirstMove);
+
     }
 
     @Override
@@ -39,13 +46,13 @@ public class Pawn extends Piece{
 
             } else if (pawnVector == 16 &&
                     this.isFirstMove() &&
-                    (BoardUtils.SECOND_ROW[this.piecePosition] && this.pieceAlliance.isBlack()) ||
-                    (BoardUtils.SEVENTH_ROW[this.piecePosition] && this.pieceAlliance.isWhite())){
+                    ((BoardUtils.SECOND_ROW[this.piecePosition] && this.pieceAlliance.isBlack()) ||
+                    (BoardUtils.SEVENTH_ROW[this.piecePosition] && this.pieceAlliance.isWhite()))){
                 // two-square pawn move
                 final int behindDestinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() * 8);
                 if (!board.getTile(behindDestinationCoordinate).isTileOccupied() &&
                         !board.getTile(destination).isTileOccupied()){
-                    legalMoves.add(new PawnMove(board, this, destination));
+                    legalMoves.add(new PawnJump(board, this, destination));
                 }
             } else if (pawnVector == 7 &&
                     !((BoardUtils.EIGHT_COLUMN[this.piecePosition] && this.pieceAlliance.isWhite()) ||
@@ -55,9 +62,10 @@ public class Pawn extends Piece{
                 if (board.getTile(destination).isTileOccupied()){
                     final Piece pieceOnTile = board.getTile(destination).getPiece();
                     if (this.pieceAlliance != pieceOnTile.getPieceAlliance()){
-                        legalMoves.add(new AttackMove(board, this, destination, pieceOnTile));
+                        legalMoves.add(new PawnAttackMove(board, this, destination, pieceOnTile));
                     }
                 }
+                // TODO: correct the other pawn move types
             } else if (pawnVector == 9 &&
                     !((BoardUtils.FIRST_COLUMN[this.piecePosition] && this.pieceAlliance.isWhite()) ||
                             (BoardUtils.EIGHT_COLUMN[this.piecePosition] && this.pieceAlliance.isBlack()))){
