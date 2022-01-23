@@ -222,7 +222,7 @@ public abstract class Move {
         }
         @Override
         public String toString(){
-            return "";
+            return decoratedMove.toString() + "=" + this.promotedPawn.getPromotionPiece().toString();
         }
 
     }

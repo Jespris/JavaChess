@@ -6,7 +6,9 @@ import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BoardUtils {
+public enum BoardUtils {
+
+    INSTANCE;
 
     public static final boolean[] FIRST_COLUMN = initColumn(0);
     public static final boolean[] SECOND_COLUMN = initColumn(1);
@@ -40,10 +42,6 @@ public class BoardUtils {
             board[i] = true;
         }
         return board;
-    }
-
-    private BoardUtils(){
-        throw new RuntimeException("You cannot instantiate me!");
     }
 
     public static boolean isValidTileCoordinate(final int index){

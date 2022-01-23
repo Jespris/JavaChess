@@ -154,6 +154,36 @@ public class Board {
         return builder.build();
     }
 
+    public static Board createMaximumLegalMovesBoard(){
+        final Builder builder = new Builder();
+        // Black pieces:
+        builder.setPiece(new King(56, Alliance.BLACK, false));
+        builder.setPiece(new Pawn(48, Alliance.BLACK, false));
+        builder.setPiece(new Pawn(49, Alliance.BLACK, false));
+        // white pieces:
+        builder.setPiece(new Rook(0, Alliance.WHITE));
+        builder.setPiece(new Rook(7, Alliance.WHITE));
+        builder.setPiece(new Queen(11, Alliance.WHITE));
+        builder.setPiece(new Queen(17, Alliance.WHITE));
+        builder.setPiece(new Queen(22, Alliance.WHITE));
+        builder.setPiece(new Queen(28, Alliance.WHITE));
+        builder.setPiece(new Queen(34, Alliance.WHITE));
+        builder.setPiece(new Queen(39, Alliance.WHITE));
+        builder.setPiece(new Queen(40, Alliance.WHITE));
+        builder.setPiece(new Queen(45, Alliance.WHITE));
+        builder.setPiece(new Queen(51, Alliance.WHITE));
+        builder.setPiece(new Bishop(57, Alliance.WHITE));
+        builder.setPiece(new Knight(58, Alliance.WHITE));
+        builder.setPiece(new Knight(59, Alliance.WHITE));
+        builder.setPiece(new King(61, Alliance.WHITE, false));
+        builder.setPiece(new Bishop(62, Alliance.WHITE));
+
+        // white to move first
+        builder.setMoveMaker(Alliance.WHITE);
+
+        return builder.build();
+    }
+
     public Tile getTile(final int tileCoordinate){
         return gameBoard.get(tileCoordinate);
     }
