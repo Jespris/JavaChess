@@ -13,8 +13,10 @@ public class BoardUtils {
     public static final boolean[] SEVENTH_COLUMN = initColumn(6);
     public static final boolean[] EIGHT_COLUMN = initColumn(7);
 
+    public static final boolean[] FIRST_ROW = initRow(0);
     public static final boolean[] SECOND_ROW = initRow(1);
     public static final boolean[] SEVENTH_ROW = initRow(6);
+    public static final boolean[] EIGHT_ROW = initRow(7);
 
     public static final String[] ALGEBRAIC_NOTATION = initAlgebraicNotation();
     public static final Map<String, Integer> POSITION_TO_COORDINATE = initPositionToCoordinateMap();

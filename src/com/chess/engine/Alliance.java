@@ -1,5 +1,6 @@
 package com.chess.engine;
 
+import com.chess.engine.board.BoardUtils;
 import com.chess.engine.player.BlackPlayer;
 import com.chess.engine.player.Player;
 import com.chess.engine.player.WhitePlayer;
@@ -23,7 +24,7 @@ public enum Alliance {
 
         @Override
         public boolean isPawnPromotionSquare(int position) {
-            return false;
+            return BoardUtils.FIRST_ROW[position];
         }
 
         @Override
@@ -54,7 +55,7 @@ public enum Alliance {
 
         @Override
         public boolean isPawnPromotionSquare(int position) {
-            return false;
+            return BoardUtils.EIGHT_ROW[position];
         }
 
         @Override

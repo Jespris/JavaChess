@@ -6,7 +6,6 @@ import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.*;
 import com.google.common.collect.ImmutableList;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,9 +37,11 @@ public class Pawn extends Piece{
 
             if (pawnVector == 8 && !board.getTile(destination).isTileOccupied()){
                 // normal pawn move
-                // TODO: add promotions!
-                legalMoves.add(new PawnMove(board, this, destination));
-
+                if (this.pieceAlliance.isPawnPromotionSquare(destination)){
+                    legalMoves.add(new PromotionMove(new PawnMove(board, this, destination)));
+                } else {
+                    legalMoves.add(new PawnMove(board, this, destination));
+                }
             } else if (pawnVector == 16 &&
                     this.isFirstMove() &&
                     ((BoardUtils.SECOND_ROW[this.piecePosition] && this.pieceAlliance.isBlack()) ||
@@ -55,11 +56,14 @@ public class Pawn extends Piece{
                     !((BoardUtils.EIGHT_COLUMN[this.piecePosition] && this.pieceAlliance.isWhite()) ||
                     (BoardUtils.FIRST_COLUMN[this.piecePosition] && this.pieceAlliance.isBlack()))){
                 // attack to the right, with exception on the edge of the board
-                // TODO: add pawn promotion with capture
                 if (board.getTile(destination).isTileOccupied()){
                     final Piece pieceOnTile = board.getTile(destination).getPiece();
                     if (this.pieceAlliance != pieceOnTile.getPieceAlliance()){
-                        legalMoves.add(new PawnAttackMove(board, this, destination, pieceOnTile));
+                        if (this.pieceAlliance.isPawnPromotionSquare(destination)){
+                            legalMoves.add(new PromotionMove(new PawnAttackMove(board, this, destination, pieceOnTile)));
+                        } else {
+                            legalMoves.add(new PawnAttackMove(board, this, destination, pieceOnTile));
+                        }
                     }
                 } else if (board.getEnPassantPawn() != null){ // en passant square
                     if (board.getEnPassantPawn().getPiecePosition() == (this.piecePosition + (this.pieceAlliance.getOppositeDirection()))){
@@ -73,11 +77,14 @@ public class Pawn extends Piece{
                     !((BoardUtils.FIRST_COLUMN[this.piecePosition] && this.pieceAlliance.isWhite()) ||
                             (BoardUtils.EIGHT_COLUMN[this.piecePosition] && this.pieceAlliance.isBlack()))){
                 // attack to the left, with exception on the edge of the board
-                // TODO: add pawn promotion with capture
                 if (board.getTile(destination).isTileOccupied()){
                     final Piece pieceOnTile = board.getTile(destination).getPiece();
                     if (this.pieceAlliance != pieceOnTile.getPieceAlliance()){
-                        legalMoves.add(new PawnAttackMove(board, this, destination, pieceOnTile));
+                        if (this.pieceAlliance.isPawnPromotionSquare(destination)){
+                            legalMoves.add(new PromotionMove(new PawnAttackMove(board, this, destination, pieceOnTile)));
+                        } else {
+                            legalMoves.add(new PawnAttackMove(board, this, destination, pieceOnTile));
+                        }
                     }
                 } else if (board.getEnPassantPawn() != null){ // en passant square
                     if (board.getEnPassantPawn().getPiecePosition() == (this.piecePosition - (this.pieceAlliance.getOppositeDirection()))){
@@ -100,5 +107,10 @@ public class Pawn extends Piece{
     @Override
     public Pawn movePiece(final Move move) {
         return new Pawn(move.getDestination(), move.getPieceMoved().getPieceAlliance());
+    }
+
+    public Piece getPromotionPiece(){
+        // TODO: implement promoting to different pieces
+        return new Queen(this.piecePosition, this.pieceAlliance, false);
     }
 }
