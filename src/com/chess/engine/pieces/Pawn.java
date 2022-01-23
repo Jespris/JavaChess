@@ -110,6 +110,11 @@ public class Pawn extends Piece{
         return new Pawn(move.getDestination(), move.getPieceMoved().getPieceAlliance());
     }
 
+    @Override
+    public int locationBonus() {
+        return this.pieceAlliance.pawnBonus(this.piecePosition);
+    }
+
     public Piece getPromotionPiece(){
         // TODO: implement promoting to different pieces
         return new Queen(this.piecePosition, this.pieceAlliance, false);

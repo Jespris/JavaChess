@@ -11,8 +11,17 @@ public final class StandardBoardEvaluator implements BoardEvaluator{
     private static final int DEPTH_BONUS = 100;
     private static final int CASTLE_BONUS = 20;
 
+    private static final StandardBoardEvaluator INSTANCE = new StandardBoardEvaluator();
+
+    private StandardBoardEvaluator(){
+    }
+
+    public static StandardBoardEvaluator get(){
+        return INSTANCE;
+    }
+
     @Override
-    public int evaluateBoard(final Board board, final int depth) {
+    public int evaluate(final Board board, final int depth) {
         return scorePlayer(board, board.whitePlayer(), depth) - scorePlayer(board, board.blackPlayer(), depth);
     }
 
@@ -47,8 +56,13 @@ public final class StandardBoardEvaluator implements BoardEvaluator{
     }
 
     private static int piecePlacement(final Player player) {
-        return 0;
+        int piecePlacementScore = 0;
+        for (final Piece piece : player.getActivePieces()){
+            piecePlacementScore += piece.locationBonus();
+        }
+        return piecePlacementScore;
     }
+
 
     private static int materialValue(final Player player){
         int materialScore = 0;

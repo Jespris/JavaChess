@@ -70,6 +70,11 @@ public class Rook extends Piece{
         return new Rook(move.getDestination(), move.getPieceMoved().getPieceAlliance());
     }
 
+    @Override
+    public int locationBonus() {
+        return this.pieceAlliance.rookBonus(this.piecePosition);
+    }
+
     // Some rook vectors are wrong at the edge of the boards, exclude those when adding legal moves
     private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset){
         return BoardUtils.FIRST_COLUMN[currentPosition] && (candidateOffset == -1);

@@ -8,6 +8,7 @@ import com.chess.engine.board.BoardUtils;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.player.MoveStatus;
 import com.chess.engine.player.MoveTransition;
+import com.chess.engine.player.ai.AlphaBetaWithMoveSorting;
 import com.chess.engine.player.ai.MiniMax;
 import com.chess.engine.player.ai.MoveStrategy;
 import com.google.common.collect.ImmutableList;
@@ -145,9 +146,9 @@ public class Table extends Observable {
             @Override
             protected Move doInBackground() throws Exception{
 
-                final MoveStrategy miniMax = new MiniMax(4);
+                final MoveStrategy strategy = new AlphaBetaWithMoveSorting(5);
 
-                final Move bestMove = miniMax.execute(Table.get().getGameBoard());
+                final Move bestMove = strategy.execute(Table.get().getGameBoard());
 
                 return bestMove;
             }

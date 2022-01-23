@@ -69,6 +69,11 @@ public class Queen extends Piece{
         return new Queen(move.getDestination(), move.getPieceMoved().getPieceAlliance());
     }
 
+    @Override
+    public int locationBonus() {
+        return this.pieceAlliance.queenBonus(this.piecePosition);
+    }
+
 
     // Some queen vectors are wrong at the edge of the boards, exclude those when adding legal moves
     private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset){

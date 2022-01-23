@@ -88,4 +88,12 @@ public enum BoardUtils {
                 piece.getPieceType() == Piece.PieceType.PAWN &&
                 piece.getPieceAlliance() != king.getPieceAlliance();
     }
+
+    public static boolean isThreatenedBoardImmediate(final Board board) {
+        return board.whitePlayer().isInCheck() || board.blackPlayer().isInCheck();
+    }
+
+    public boolean isEndGameScenario(final Board board) {
+        return board.currentPlayer().isInCheckMate() || board.currentPlayer().isInStaleMate();
+    }
 }

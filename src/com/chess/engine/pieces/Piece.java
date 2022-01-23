@@ -57,6 +57,8 @@ public abstract class Piece {
 
     public abstract Piece movePiece(Move move);
 
+    public abstract int locationBonus();
+
     public int getPieceValue(){
         return this.pieceType.getPieceValue();
     }

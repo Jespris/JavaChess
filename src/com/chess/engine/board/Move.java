@@ -36,6 +36,7 @@ public abstract class Move {
         result = prime * result + this.endCoordinate;
         result = prime * result + this.pieceMoved.hashCode();
         result = prime * result + this.pieceMoved.getPiecePosition();
+        result = result + (isFirstMove ? 1 : 0);
         return result;
     }
 
@@ -53,7 +54,7 @@ public abstract class Move {
                 getPieceMoved().equals(otherMove.getPieceMoved());
     }
 
-    private Board getBoard() {
+    public Board getBoard() {
         return this.board;
     }
 
@@ -453,6 +454,11 @@ public abstract class Move {
         @Override
         public int getCurrentCoordinate(){
             return -1;
+        }
+
+        @Override
+        public String toString(){
+            return "Null Move";
         }
     }
 

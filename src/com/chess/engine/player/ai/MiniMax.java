@@ -4,19 +4,26 @@ import com.chess.engine.board.Board;
 import com.chess.engine.board.Move;
 import com.chess.engine.player.MoveTransition;
 
-public class MiniMax implements MoveStrategy {
+import java.util.Observable;
+
+public class MiniMax extends Observable implements MoveStrategy {
 
     private final BoardEvaluator boardEvaluator;
     private final int searchDepth;
 
     public MiniMax(final int searchDepth){
-        this.boardEvaluator = new StandardBoardEvaluator();
+        this.boardEvaluator = StandardBoardEvaluator.get();
         this.searchDepth = searchDepth;
     }
 
     @Override
     public String toString(){
         return "MiniMax";
+    }
+
+    @Override
+    public long getNumBoardsEvaluated() {
+        return 0;
     }
 
     @Override
@@ -51,7 +58,7 @@ public class MiniMax implements MoveStrategy {
 
     public int min(final Board board, final int depth){
         if (depth == 0 || isEndGameScenario(board)) {
-            return this.boardEvaluator.evaluateBoard(board, depth);
+            return this.boardEvaluator.evaluate(board, depth);
         }
 
         int lowestSeenValue = Integer.MAX_VALUE;
@@ -73,7 +80,7 @@ public class MiniMax implements MoveStrategy {
 
     public int max(final Board board, final int depth){
         if (depth == 0 || isEndGameScenario(board)) {
-            return this.boardEvaluator.evaluateBoard(board, depth);
+            return this.boardEvaluator.evaluate(board, depth);
         }
 
         int highestSeenValue = Integer.MIN_VALUE;
