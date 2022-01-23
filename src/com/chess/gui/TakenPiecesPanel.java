@@ -50,9 +50,9 @@ public class TakenPiecesPanel extends JPanel {
         for (final Move move : moveLog.getMoves()){
             if (move.isAttackMove()){
                 final Piece takenPiece = move.getAttackedPiece();
-                if(takenPiece.getPieceAlliance() == Alliance.WHITE){
+                if(takenPiece.getPieceAlliance().isWhite()){
                     whiteTakenPieces.add(takenPiece);
-                } else if (takenPiece.getPieceAlliance() == Alliance.BLACK){
+                } else if (takenPiece.getPieceAlliance().isBlack()){
                     blackTakenPieces.add(takenPiece);
                 } else {
                     throw new RuntimeException("Piece didn't have alliance in the TakenPiecesPanel, should not reach here!");
