@@ -36,7 +36,7 @@ public class WhitePlayer extends Player{
     }
 
     @Override
-    protected Collection<Move> calculateCastles(Collection<Move> playerLegalMoves, Collection<Move> opponentLegalMoves) {
+    public Collection<Move> calculateCastles(Collection<Move> playerLegalMoves, Collection<Move> opponentLegalMoves) {
 
         final List<Move> castleMoves = new ArrayList<>();
 

@@ -5,6 +5,7 @@ import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.AttackMove;
+import com.chess.engine.board.Move.MajorAttackMove;
 import com.chess.engine.board.Move.MajorMove;
 import com.chess.engine.board.Tile;
 import com.google.common.collect.ImmutableList;
@@ -21,7 +22,7 @@ public class Bishop extends Piece{
     }
 
     public Bishop(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove){
-        super(PieceType.ROOK, piecePosition, pieceAlliance, isFirstMove);
+        super(PieceType.BISHOP, piecePosition, pieceAlliance, isFirstMove);
 
     }
 
@@ -50,7 +51,7 @@ public class Bishop extends Piece{
                         final Alliance pieceOnTileAlliance = pieceOnTile.getPieceAlliance();
 
                         if (this.pieceAlliance != pieceOnTileAlliance) {
-                            legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceOnTile));
+                            legalMoves.add(new MajorAttackMove(board, this, candidateDestinationCoordinate, pieceOnTile));
                         }
                         break;
                     }

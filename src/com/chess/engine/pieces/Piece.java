@@ -57,6 +57,10 @@ public abstract class Piece {
 
     public abstract Piece movePiece(Move move);
 
+    public int getPieceValue(){
+        return this.pieceType.getPieceValue();
+    }
+
     public Alliance getPieceAlliance(){
         return this.pieceAlliance;
     }
@@ -75,22 +79,28 @@ public abstract class Piece {
 
     public enum PieceType {
 
-        PAWN("P"),
-        ROOK("R"),
-        KNIGHT("N"),
-        BISHOP("B"),
-        QUEEN("Q"),
-        KING("K");
+        PAWN("P", 100),
+        ROOK("R", 500),
+        KNIGHT("N", 300),
+        BISHOP("B", 300),
+        QUEEN("Q", 900),
+        KING("K", 10000);
 
         private final String pieceName;
+        private final int pieceValue;
 
-        PieceType(final String pieceName){
+        PieceType(final String pieceName, final int pieceValue){
             this.pieceName = pieceName;
+            this.pieceValue = pieceValue;
         }
 
         @Override
         public String toString(){
             return this.pieceName;
+        }
+
+        public int getPieceValue(){
+            return this.pieceValue;
         }
     }
 }

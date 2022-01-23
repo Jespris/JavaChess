@@ -22,8 +22,18 @@ public enum Alliance {
         }
 
         @Override
+        public boolean isPawnPromotionSquare(int position) {
+            return false;
+        }
+
+        @Override
         public Player choosePlayerByAlliance(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer) {
             return whitePlayer;
+        }
+
+        @Override
+        public int getOppositeDirection() {
+            return 1;
         }
     },
     BLACK() {
@@ -43,8 +53,18 @@ public enum Alliance {
         }
 
         @Override
+        public boolean isPawnPromotionSquare(int position) {
+            return false;
+        }
+
+        @Override
         public Player choosePlayerByAlliance(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer) {
             return blackPlayer;
+        }
+
+        @Override
+        public int getOppositeDirection() {
+            return -1;
         }
     };
 
@@ -53,5 +73,9 @@ public enum Alliance {
     public abstract boolean isWhite();
     public abstract boolean isBlack();
 
+    public abstract boolean isPawnPromotionSquare(int position);
+
     public abstract Player choosePlayerByAlliance(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer);
+
+    public abstract int getOppositeDirection();
 }

@@ -4,6 +4,7 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move.AttackMove;
+import com.chess.engine.board.Move.MajorAttackMove;
 import com.chess.engine.board.Move.MajorMove;
 import com.chess.engine.board.Tile;
 import com.chess.engine.board.Move;
@@ -21,7 +22,7 @@ public class Knight extends Piece{
     }
 
     public Knight(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove){
-        super(PieceType.ROOK, piecePosition, pieceAlliance, isFirstMove);
+        super(PieceType.KNIGHT, piecePosition, pieceAlliance, isFirstMove);
 
     }
 
@@ -53,7 +54,7 @@ public class Knight extends Piece{
                     final Alliance pieceOnTileAlliance = pieceOnTile.getPieceAlliance();
 
                     if (this.pieceAlliance != pieceOnTileAlliance){
-                        legalMoves.add(new AttackMove(board, this, destination, pieceOnTile));
+                        legalMoves.add(new MajorAttackMove(board, this, destination, pieceOnTile));
                     }
                 }
             }

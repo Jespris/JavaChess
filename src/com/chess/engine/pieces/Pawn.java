@@ -4,10 +4,7 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
-import com.chess.engine.board.Move.AttackMove;
-import com.chess.engine.board.Move.PawnAttackMove;
-import com.chess.engine.board.Move.PawnJump;
-import com.chess.engine.board.Move.PawnMove;
+import com.chess.engine.board.Move.*;
 import com.google.common.collect.ImmutableList;
 import org.checkerframework.checker.units.qual.A;
 
@@ -24,7 +21,7 @@ public class Pawn extends Piece{
     }
 
     public Pawn(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove){
-        super(PieceType.ROOK, piecePosition, pieceAlliance, isFirstMove);
+        super(PieceType.PAWN, piecePosition, pieceAlliance, isFirstMove);
 
     }
 
@@ -41,7 +38,7 @@ public class Pawn extends Piece{
 
             if (pawnVector == 8 && !board.getTile(destination).isTileOccupied()){
                 // normal pawn move
-                // TODO: add pawn promotion with capture
+                // TODO: add promotions!
                 legalMoves.add(new PawnMove(board, this, destination));
 
             } else if (pawnVector == 16 &&
@@ -64,8 +61,14 @@ public class Pawn extends Piece{
                     if (this.pieceAlliance != pieceOnTile.getPieceAlliance()){
                         legalMoves.add(new PawnAttackMove(board, this, destination, pieceOnTile));
                     }
+                } else if (board.getEnPassantPawn() != null){ // en passant square
+                    if (board.getEnPassantPawn().getPiecePosition() == (this.piecePosition + (this.pieceAlliance.getOppositeDirection()))){
+                        final Piece pieceOnCandidate = board.getEnPassantPawn();
+                        if (this.pieceAlliance != pieceOnCandidate.getPieceAlliance()){
+                            legalMoves.add(new EnPassantMove(board, this, destination, pieceOnCandidate));
+                        }
+                    }
                 }
-                // TODO: correct the other pawn move types
             } else if (pawnVector == 9 &&
                     !((BoardUtils.FIRST_COLUMN[this.piecePosition] && this.pieceAlliance.isWhite()) ||
                             (BoardUtils.EIGHT_COLUMN[this.piecePosition] && this.pieceAlliance.isBlack()))){
@@ -74,7 +77,14 @@ public class Pawn extends Piece{
                 if (board.getTile(destination).isTileOccupied()){
                     final Piece pieceOnTile = board.getTile(destination).getPiece();
                     if (this.pieceAlliance != pieceOnTile.getPieceAlliance()){
-                        legalMoves.add(new AttackMove(board, this, destination, pieceOnTile));
+                        legalMoves.add(new PawnAttackMove(board, this, destination, pieceOnTile));
+                    }
+                } else if (board.getEnPassantPawn() != null){ // en passant square
+                    if (board.getEnPassantPawn().getPiecePosition() == (this.piecePosition - (this.pieceAlliance.getOppositeDirection()))){
+                        final Piece pieceOnCandidate = board.getEnPassantPawn();
+                        if (this.pieceAlliance != pieceOnCandidate.getPieceAlliance()){
+                            legalMoves.add(new EnPassantMove(board, this, destination, pieceOnCandidate));
+                        }
                     }
                 }
             }

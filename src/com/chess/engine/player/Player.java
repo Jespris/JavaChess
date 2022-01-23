@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static com.chess.engine.pieces.Piece.*;
+
 public abstract class Player {
 
     protected final Board board;
@@ -50,7 +52,7 @@ public abstract class Player {
 
     private King establishKing() {
         for (final Piece piece : getActivePieces()) {
-            if (piece.getPieceType() == Piece.PieceType.KING){
+            if (piece.getPieceType() == PieceType.KING){
                 return (King)piece;
             }
         }
@@ -107,6 +109,6 @@ public abstract class Player {
     public abstract Collection<Piece> getActivePieces();
     public abstract Alliance getAlliance();
     public abstract Player getOpponent();
-    protected abstract Collection<Move> calculateCastles(final Collection<Move> playerLegalMoves, final Collection<Move> opponentLegalMoves);
+    public abstract Collection<Move> calculateCastles(final Collection<Move> playerLegalMoves, final Collection<Move> opponentLegalMoves);
 
 }

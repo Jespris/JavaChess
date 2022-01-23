@@ -1,6 +1,7 @@
 package com.chess.engine.board;
 
 import com.chess.engine.Alliance;
+import com.chess.engine.board.Move.MoveFactory;
 import com.chess.engine.pieces.*;
 import com.chess.engine.player.BlackPlayer;
 import com.chess.engine.player.Player;
@@ -20,11 +21,17 @@ public class Board {
     private final BlackPlayer blackPlayer;
     private final Player currentPlayer;
 
+    private final Pawn enPassantPawn;
+
+    private final Move transitionMove;
+
     private Board(final Builder builder){
         this.gameBoard = createGameBoard(builder);
 
         this.whitePieces = calculateActivePieces(this.gameBoard, Alliance.WHITE);
         this.blackPieces = calculateActivePieces(this.gameBoard, Alliance.BLACK);
+
+        this.enPassantPawn = builder.enPassantPawn;
 
         final Collection<Move> whiteStandardLegalMoves = calculateLegalMoves(this.whitePieces);
         final Collection<Move> blackStandardLegalMoves = calculateLegalMoves(this.blackPieces);
@@ -33,6 +40,8 @@ public class Board {
         this.blackPlayer = new BlackPlayer(this, blackStandardLegalMoves, whiteStandardLegalMoves);
 
         this.currentPlayer = builder.nextMoveMaker.choosePlayerByAlliance(this.whitePlayer, this.blackPlayer);
+
+        this.transitionMove = builder.transitionMove != null ? builder.transitionMove : MoveFactory.getNullMove();
     }
 
     @Override
@@ -66,6 +75,10 @@ public class Board {
 
     public Collection<Piece> getBlackPieces(){
         return this.blackPieces;
+    }
+
+    public Move getTransitionMove(){
+        return this.transitionMove;
     }
 
     private Collection<Move> calculateLegalMoves(Collection<Piece> pieces){
@@ -105,7 +118,7 @@ public class Board {
         builder.setPiece(new Knight(1, Alliance.BLACK));
         builder.setPiece(new Bishop(2, Alliance.BLACK));
         builder.setPiece(new Queen(3, Alliance.BLACK));
-        builder.setPiece(new King(4, Alliance.BLACK));
+        builder.setPiece(new King(4, Alliance.BLACK, true));
         builder.setPiece(new Bishop(5, Alliance.BLACK));
         builder.setPiece(new Knight(6, Alliance.BLACK));
         builder.setPiece(new Rook(7, Alliance.BLACK));
@@ -122,7 +135,7 @@ public class Board {
         builder.setPiece(new Knight(57, Alliance.WHITE));
         builder.setPiece(new Bishop(58, Alliance.WHITE));
         builder.setPiece(new Queen(59, Alliance.WHITE));
-        builder.setPiece(new King(60, Alliance.WHITE));
+        builder.setPiece(new King(60, Alliance.WHITE, true));
         builder.setPiece(new Bishop(61, Alliance.WHITE));
         builder.setPiece(new Knight(62, Alliance.WHITE));
         builder.setPiece(new Rook(63, Alliance.WHITE));
@@ -149,10 +162,16 @@ public class Board {
         return Iterables.unmodifiableIterable(Iterables.concat(this.whitePlayer.getLegalMoves(), this.blackPlayer.getLegalMoves()));
     }
 
+    public Pawn getEnPassantPawn(){
+        return this.enPassantPawn;
+    }
+
     public static class Builder {
 
         Map<Integer, Piece> boardConfig;
         Alliance nextMoveMaker;
+        Pawn enPassantPawn;
+        Move transitionMove;
 
         public Builder() {
             this.boardConfig = new HashMap<>(32, 1.0f);
@@ -172,7 +191,13 @@ public class Board {
             return new Board(this);
         }
 
-        public void setEnPassantPawn(Pawn movedPawn) {
+        public void setEnPassantPawn(final Pawn movedPawn) {
+            this.enPassantPawn = movedPawn;
+        }
+
+        public Builder setMoveTransition(final Move transitionMove) {
+            this.transitionMove = transitionMove;
+            return this;
         }
     }
 }

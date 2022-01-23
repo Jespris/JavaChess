@@ -10,6 +10,8 @@ import com.chess.engine.pieces.Pawn;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.player.MoveStatus;
 import com.chess.engine.player.MoveTransition;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import javax.imageio.ImageIO;
@@ -33,8 +35,11 @@ import static javax.swing.SwingUtilities.isRightMouseButton;
 public class Table {
 
     private final JFrame gameFrame;
+    private final GameHistoryPanel gameHistoryPanel;
+    private final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
     private Board chessBoard;
+    private final MoveLog moveLog;
 
     private Tile sourceTile;
     private Tile destinationTile;
@@ -60,10 +65,18 @@ public class Table {
 
         this.chessBoard = Board.createStandardBoard();
 
+        this.takenPiecesPanel = new TakenPiecesPanel();
+        this.gameHistoryPanel = new GameHistoryPanel();
+
         this.boardPanel = new BoardPanel();
+        this.moveLog = new MoveLog();
+
         this.boardDirection = BoardDirection.NORMAL;
         this.highlightLegalMoves = false;
+
+        this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
+        this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.setVisible(true);
     }
 
@@ -147,6 +160,38 @@ public class Table {
         }
     }
 
+    public static class MoveLog {
+
+        private final List<Move> moves;
+        MoveLog(){
+            this.moves = new ArrayList<>();
+        }
+
+        public List<Move> getMoves() {
+            return this.moves;
+        }
+
+        public void addMove(final Move move){
+            this.moves.add(move);
+        }
+
+        public int size(){
+            return this.moves.size();
+        }
+
+        public void clear(){
+            this.moves.clear();
+        }
+
+        public Move removeMove(int index){
+            return this.moves.remove(index);
+        }
+
+        public boolean removeMove(final Move move){
+            return this.moves.remove(move);
+        }
+    }
+
     private class TilePanel extends JPanel{
 
         private final int tileID;
@@ -183,7 +228,7 @@ public class Table {
                             final MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
                             if (transition.getMoveStatus().isDone()) {
                                 chessBoard = transition.getTransitionBoard();
-                                // TODO: add move to move log
+                                moveLog.addMove(move);
                             }
                             sourceTile = null;
                             destinationTile = null;
@@ -192,6 +237,8 @@ public class Table {
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
+                                gameHistoryPanel.redo(chessBoard, moveLog);
+                                takenPiecesPanel.redo(moveLog);
                                 boardPanel.drawBoard(chessBoard);
                             }
                         });
@@ -267,6 +314,13 @@ public class Table {
 
         private Collection<Move> pieceLegalMoves(final Board board) {
             if (humanMovePiece != null && humanMovePiece.getPieceAlliance() == board.currentPlayer().getAlliance()){
+                // add the castle moves
+                if(humanMovePiece.getPieceType() == Piece.PieceType.KING && humanMovePiece.isFirstMove()){
+                    final List<Move> includesCastleMoves = new ArrayList<>(board.currentPlayer().calculateCastles(board.currentPlayer().getLegalMoves(),
+                            board.currentPlayer().getOpponent().getLegalMoves()));
+                    return ImmutableList.copyOf(Iterables.concat(humanMovePiece.calculateLegalMoves(board), includesCastleMoves));
+                }
+                // if no castle moves, return regular moves
                 return humanMovePiece.calculateLegalMoves(board);
             }
             return Collections.emptyList();
