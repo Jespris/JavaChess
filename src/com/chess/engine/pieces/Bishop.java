@@ -41,21 +41,19 @@ public class Bishop extends Piece{
 
                 if (BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
 
-                    final Tile destinationTile = board.getTile(candidateDestinationCoordinate);
+                    final Piece pieceAtDestination = board.getPiece(candidateDestinationCoordinate);
 
-                    if (!destinationTile.isTileOccupied()) {
+                    if (pieceAtDestination == null) {
                         legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
                     } else {
 
-                        final Piece pieceOnTile = destinationTile.getPiece();
-                        final Alliance pieceOnTileAlliance = pieceOnTile.getPieceAlliance();
+                        final Alliance pieceOnTileAlliance = pieceAtDestination.getPieceAlliance();
 
                         if (this.pieceAlliance != pieceOnTileAlliance) {
-                            legalMoves.add(new MajorAttackMove(board, this, candidateDestinationCoordinate, pieceOnTile));
+                            legalMoves.add(new MajorAttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                         }
                         break;
                     }
-
                 }
             }
         }

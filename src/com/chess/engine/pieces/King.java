@@ -17,14 +17,36 @@ import java.util.List;
 public class King extends Piece{
 
     private final static int[] KING_VECTORS = {-9, -8, -7, -1, 1, 7, 8, 9};
+    private final boolean isCastled;
+    private final boolean kingSideCastleCapable;
+    private final boolean queenSideCastleCapable;
 
-    public King(final int piecePosition, final Alliance pieceAlliance) {
+    public King(final int piecePosition, final Alliance pieceAlliance,
+                final boolean kingSideCastleCapable, final boolean queenSideCastleCapable) {
         super(PieceType.KING, piecePosition, pieceAlliance, true);
+        this.isCastled = false;
+        this.kingSideCastleCapable = kingSideCastleCapable;
+        this.queenSideCastleCapable = queenSideCastleCapable;
     }
 
-    public King(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove){
+    public King(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove,
+                final boolean isCastled, final boolean kingSideCastleCapable, final boolean queenSideCastleCapable){
         super(PieceType.KING, piecePosition, pieceAlliance, isFirstMove);
+        this.isCastled = isCastled;
+        this.kingSideCastleCapable = kingSideCastleCapable;
+        this.queenSideCastleCapable = queenSideCastleCapable;
+    }
 
+    public boolean hasCastled(){
+        return this.isCastled;
+    }
+
+    public boolean isKingSideCastleCapable() {
+        return this.kingSideCastleCapable;
+    }
+
+    public boolean isQueenSideCastleCapable() {
+        return this.queenSideCastleCapable;
     }
 
     @Override
@@ -35,21 +57,17 @@ public class King extends Piece{
             final int destination = this.piecePosition + kingVector;
             if (BoardUtils.isValidTileCoordinate(destination)){
 
-                final Tile destinationTile = board.getTile(destination);
-
                 if (isFirstColumnExclusion(destination, kingVector) || isEightColumnExclusion(destination, kingVector)){
                     continue;
                 }
-
-                if (!destinationTile.isTileOccupied()) {
+                final Piece pieceAtDestination = board.getPiece(destination);
+                if (pieceAtDestination == null) {
                     legalMoves.add(new MajorMove(board, this, destination));
                 } else {
-
-                    final Piece pieceOnTile = destinationTile.getPiece();
-                    final Alliance pieceOnTileAlliance = pieceOnTile.getPieceAlliance();
+                    final Alliance pieceOnTileAlliance = pieceAtDestination.getPieceAlliance();
 
                     if (this.pieceAlliance != pieceOnTileAlliance) {
-                        legalMoves.add(new MajorAttackMove(board, this, destination, pieceOnTile));
+                        legalMoves.add(new MajorAttackMove(board, this, destination, pieceAtDestination));
                     }
                 }
             }
@@ -64,7 +82,7 @@ public class King extends Piece{
 
     @Override
     public King movePiece(final Move move) {
-        return new King(move.getDestination(), move.getPieceMoved().getPieceAlliance());
+        return new King(move.getDestination(), move.getPieceMoved().getPieceAlliance(), false, move.isCastlingMove(), false, false);
     }
 
     // Some king vectors are wrong at the edge of the boards, exclude those when adding legal moves

@@ -1,14 +1,11 @@
 package com.chess.gui;
 
-import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.MoveFactory;
 import com.chess.engine.board.Tile;
 import com.chess.engine.board.BoardUtils;
-import com.chess.engine.pieces.Pawn;
 import com.chess.engine.pieces.Piece;
-import com.chess.engine.player.MoveStatus;
 import com.chess.engine.player.MoveTransition;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -41,8 +38,7 @@ public class Table {
     private Board chessBoard;
     private final MoveLog moveLog;
 
-    private Tile sourceTile;
-    private Tile destinationTile;
+    private Piece sourcePiece;
     private Piece humanMovePiece;
     private BoardDirection boardDirection;
 
@@ -202,36 +198,32 @@ public class Table {
             setPreferredSize(TILE_PANEL_DIMENSION);
             assignTileColor();
             assignTilePieceIcon(chessBoard);
-
             addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(final MouseEvent e) {
                     if (isRightMouseButton(e)) {
                         // cancel selection
-                        sourceTile = null;
-                        destinationTile = null;
+                        sourcePiece = null;
                         humanMovePiece = null;
                     } else if (isLeftMouseButton(e)) {
                         // select square if piece is on that square
-                        if (sourceTile == null) {
+                        if (sourcePiece == null) {
                             // first click
-                            sourceTile = chessBoard.getTile(tileID);
-                            humanMovePiece = sourceTile.getPiece();
+                            sourcePiece = chessBoard.getPiece(tileID);
+                            humanMovePiece = sourcePiece;
                             // if empty tile clicked,
                             if (humanMovePiece == null) {
-                                sourceTile = null;
+                                sourcePiece = null;
                             }
                         } else {
                             // second click
-                            destinationTile = chessBoard.getTile(tileID);
-                            final Move move = MoveFactory.createMove(chessBoard, sourceTile.getTileCoordinate(), destinationTile.getTileCoordinate());
+                            final Move move = MoveFactory.createMove(chessBoard, sourcePiece.getPiecePosition(), tileID);
                             final MoveTransition transition = chessBoard.currentPlayer().makeMove(move);
                             if (transition.getMoveStatus().isDone()) {
-                                chessBoard = transition.getTransitionBoard();
+                                chessBoard = transition.getToBoard();
                                 moveLog.addMove(move);
                             }
-                            sourceTile = null;
-                            destinationTile = null;
+                            sourcePiece = null;
                             humanMovePiece = null;
                         }
                         SwingUtilities.invokeLater(new Runnable() {
@@ -270,11 +262,11 @@ public class Table {
 
         private void assignTilePieceIcon(final Board board) {
             this.removeAll();
-            if (board.getTile(this.tileID).isTileOccupied()){
+            if (board.getPiece(this.tileID) != null){
                 try {
                     // example WB => white Bishop, BB=> black bishop
-                    final String pieceString = board.getTile(this.tileID).getPiece().getPieceAlliance().toString().charAt(0) +
-                            board.getTile(this.tileID).toString();
+                    final String pieceString = board.getPiece(this.tileID).getPieceAlliance().toString().charAt(0) + "" +
+                            board.getPiece(this.tileID).toString();
                     final BufferedImage image = ImageIO.read(
                             new File(defaultPieceImagePath + pieceString + ".gif"));
                     add(new JLabel(new ImageIcon(image)));

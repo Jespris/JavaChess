@@ -361,18 +361,16 @@ public abstract class Move {
         @Override
         public Board execute(){
             final Builder builder = new Builder();
-            for (final Piece piece : this.board.currentPlayer().getActivePieces()){
-                if (!this.pieceMoved.equals(piece)){
+            for (final Piece piece : this.board.getAllPieces()){
+                if (!this.pieceMoved.equals(piece) && !this.castleRook.equals(piece)){
                     builder.setPiece(piece);
                 }
             }
-            for (final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()){
-                builder.setPiece(piece);
-            }
             builder.setPiece(this.pieceMoved.movePiece(this));
-            // TODO: look into first move in pieces
-            builder.setPiece(new Rook(this.castleRookDestination, this.castleRook.getPieceAlliance()));
+            // need to create a new rook
+            builder.setPiece(new Rook(this.castleRookDestination, this.castleRook.getPieceAlliance(), false));
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
+            builder.setMoveTransition(this);
             return builder.build();
         }
 

@@ -35,9 +35,10 @@ public class Pawn extends Piece{
                 continue;
             }
 
-            if (pawnVector == 8 && !board.getTile(destination).isTileOccupied()){
+            if (pawnVector == 8 && board.getPiece(destination) == null){
                 // normal pawn move
                 if (this.pieceAlliance.isPawnPromotionSquare(destination)){
+                    // TODO: add more promotion alternatives
                     legalMoves.add(new PromotionMove(new PawnMove(board, this, destination)));
                 } else {
                     legalMoves.add(new PawnMove(board, this, destination));
@@ -48,16 +49,16 @@ public class Pawn extends Piece{
                     (BoardUtils.SEVENTH_ROW[this.piecePosition] && this.pieceAlliance.isWhite()))){
                 // two-square pawn move
                 final int behindDestinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() * 8);
-                if (!board.getTile(behindDestinationCoordinate).isTileOccupied() &&
-                        !board.getTile(destination).isTileOccupied()){
+                if (board.getPiece(behindDestinationCoordinate) == null &&
+                        board.getPiece(destination) == null){
                     legalMoves.add(new PawnJump(board, this, destination));
                 }
             } else if (pawnVector == 7 &&
                     !((BoardUtils.EIGHT_COLUMN[this.piecePosition] && this.pieceAlliance.isWhite()) ||
                     (BoardUtils.FIRST_COLUMN[this.piecePosition] && this.pieceAlliance.isBlack()))){
                 // attack to the right, with exception on the edge of the board
-                if (board.getTile(destination).isTileOccupied()){
-                    final Piece pieceOnTile = board.getTile(destination).getPiece();
+                if (board.getPiece(destination) != null){
+                    final Piece pieceOnTile = board.getPiece(destination);
                     if (this.pieceAlliance != pieceOnTile.getPieceAlliance()){
                         if (this.pieceAlliance.isPawnPromotionSquare(destination)){
                             legalMoves.add(new PromotionMove(new PawnAttackMove(board, this, destination, pieceOnTile)));
@@ -77,8 +78,8 @@ public class Pawn extends Piece{
                     !((BoardUtils.FIRST_COLUMN[this.piecePosition] && this.pieceAlliance.isWhite()) ||
                             (BoardUtils.EIGHT_COLUMN[this.piecePosition] && this.pieceAlliance.isBlack()))){
                 // attack to the left, with exception on the edge of the board
-                if (board.getTile(destination).isTileOccupied()){
-                    final Piece pieceOnTile = board.getTile(destination).getPiece();
+                if (board.getPiece(destination) != null){
+                    final Piece pieceOnTile = board.getPiece(destination);
                     if (this.pieceAlliance != pieceOnTile.getPieceAlliance()){
                         if (this.pieceAlliance.isPawnPromotionSquare(destination)){
                             legalMoves.add(new PromotionMove(new PawnAttackMove(board, this, destination, pieceOnTile)));

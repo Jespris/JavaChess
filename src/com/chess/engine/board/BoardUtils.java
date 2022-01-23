@@ -1,6 +1,7 @@
 package com.chess.engine.board;
 
-import com.google.common.collect.ImmutableList;
+import com.chess.engine.pieces.King;
+import com.chess.engine.pieces.Piece;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public enum BoardUtils {
         return 0 <= index && index < NUM_TILES;
     }
 
-    public static int getCoordinateAtChessNotation(final String chessCoordinate) {
+    public static int getCoordinateAtPosition(final String chessCoordinate) {
         return POSITION_TO_COORDINATE.get(chessCoordinate);
     }
 
@@ -77,5 +78,14 @@ public enum BoardUtils {
                 "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2",
                 "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"
         };
+    }
+
+    public static boolean isKingPawnTrap(final Board board,
+                                         final King king,
+                                         final int frontTile) {
+        final Piece piece = board.getPiece(frontTile);
+        return piece != null &&
+                piece.getPieceType() == Piece.PieceType.PAWN &&
+                piece.getPieceAlliance() != king.getPieceAlliance();
     }
 }

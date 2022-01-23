@@ -43,18 +43,14 @@ public class Knight extends Piece{
                     // knight jump is wrong at the edge of the board
                     continue;
                 }
-
-                final Tile destinationTile = board.getTile(destination);
-
-                if (!destinationTile.isTileOccupied()){
+                final Piece pieceAtDestination = board.getPiece(destination);
+                if (pieceAtDestination == null) {
                     legalMoves.add(new MajorMove(board, this, destination));
                 } else {
+                    final Alliance pieceOnTileAlliance = pieceAtDestination.getPieceAlliance();
 
-                    final Piece pieceOnTile = destinationTile.getPiece();
-                    final Alliance pieceOnTileAlliance = pieceOnTile.getPieceAlliance();
-
-                    if (this.pieceAlliance != pieceOnTileAlliance){
-                        legalMoves.add(new MajorAttackMove(board, this, destination, pieceOnTile));
+                    if (this.pieceAlliance != pieceOnTileAlliance) {
+                        legalMoves.add(new MajorAttackMove(board, this, destination, pieceAtDestination));
                     }
                 }
             }

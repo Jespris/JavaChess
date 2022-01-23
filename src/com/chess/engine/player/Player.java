@@ -86,7 +86,15 @@ public abstract class Player {
     }
 
     public boolean hasCastled(){
-        return false;
+        return this.playerKing.hasCastled();
+    }
+
+    public boolean isKingSideCastleCapable() {
+        return this.playerKing.isKingSideCastleCapable();
+    }
+
+    public boolean isQueenSideCastleCapable() {
+        return this.playerKing.isQueenSideCastleCapable();
     }
 
     public MoveTransition makeMove(final Move move){
@@ -110,5 +118,11 @@ public abstract class Player {
     public abstract Alliance getAlliance();
     public abstract Player getOpponent();
     public abstract Collection<Move> calculateCastles(final Collection<Move> playerLegalMoves, final Collection<Move> opponentLegalMoves);
+
+    protected boolean hasCastleOpportunities(){
+        return !this.isInCheck &&
+                !this.playerKing.hasCastled() &&
+                (this.playerKing.isKingSideCastleCapable() || this.playerKing.isQueenSideCastleCapable());
+    }
 
 }
