@@ -101,6 +101,13 @@ public abstract class Move {
         return builder.build();
     }
 
+    public Board undo() {
+        final Builder builder = new Builder();
+        this.board.getAllPieces().forEach(builder::setPiece);
+        builder.setMoveMaker(this.board.currentPlayer().getAlliance());
+        return builder.build();
+    }
+
     public static final class MajorMove extends Move{
 
         public MajorMove(final Board board, final Piece pieceMoved, final int endCoordinate) {
@@ -199,7 +206,7 @@ public abstract class Move {
         @Override
         public Board execute(){
             final Board pawnMovedBoard = this.decoratedMove.execute();
-            final Board.Builder builder = new Builder();
+            final Builder builder = new Builder();
             for (final Piece piece : pawnMovedBoard.currentPlayer().getActivePieces()){
                 if (!this.promotedPawn.equals(piece)) {
                     builder.setPiece(piece);

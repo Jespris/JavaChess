@@ -54,23 +54,23 @@ public class King extends Piece{
         final List<Move> legalMoves = new ArrayList<>();
 
         for (final int kingVector: KING_VECTORS){
+            if (isFirstColumnExclusion(this.piecePosition, kingVector) ||
+                    isEightColumnExclusion(this.piecePosition, kingVector)){
+                continue;
+            }
             final int destination = this.piecePosition + kingVector;
-            if (BoardUtils.isValidTileCoordinate(destination)){
-
-                if (isFirstColumnExclusion(destination, kingVector) || isEightColumnExclusion(destination, kingVector)){
-                    continue;
-                }
+            if (BoardUtils.isValidTileCoordinate(destination)) {
                 final Piece pieceAtDestination = board.getPiece(destination);
                 if (pieceAtDestination == null) {
                     legalMoves.add(new MajorMove(board, this, destination));
                 } else {
                     final Alliance pieceOnTileAlliance = pieceAtDestination.getPieceAlliance();
-
                     if (this.pieceAlliance != pieceOnTileAlliance) {
                         legalMoves.add(new MajorAttackMove(board, this, destination, pieceAtDestination));
                     }
                 }
             }
+
         }
         return ImmutableList.copyOf(legalMoves);
     }

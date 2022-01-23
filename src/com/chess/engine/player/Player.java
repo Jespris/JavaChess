@@ -72,13 +72,7 @@ public abstract class Player {
     }
 
     protected boolean hasEscapeMoves() {
-        for (final Move move: this.legalMoves){
-            final MoveTransition transition = makeMove(move);
-            if (transition.getMoveStatus().isDone()){
-                return true;
-            }
-        }
-        return false;
+        return this.legalMoves.stream().anyMatch(move -> makeMove(move).getMoveStatus().isDone());
     }
 
     public boolean isInStaleMate(){
@@ -98,21 +92,20 @@ public abstract class Player {
     }
 
     public MoveTransition makeMove(final Move move){
-        if (!isMoveLegal(move)){
-            return new MoveTransition(this.board, move, MoveStatus.ILLEGAL_MOVE);
+        if (!this.legalMoves.contains(move)){
+            return new MoveTransition(this.board, this.board, move, MoveStatus.ILLEGAL_MOVE);
         }
-
-        final Board transitionBoard = move.execute();
-
-        final Collection<Move> kingAttacks = Player.calculateAttacksOnTile(transitionBoard.currentPlayer().getOpponent().getPlayerKing().getPiecePosition(),
-                transitionBoard.currentPlayer().getLegalMoves());
-
-        if (!kingAttacks.isEmpty()){
-            return new MoveTransition(this.board, move, MoveStatus.LEAVES_PLAYER_IN_CHECK);
-        }
-
-        return new MoveTransition(transitionBoard, move, MoveStatus.DONE);
+        final Board transitionedBoard = move.execute();
+        return transitionedBoard.currentPlayer().getOpponent().isInCheck() ?
+                new MoveTransition(this.board, this.board, move, MoveStatus.LEAVES_PLAYER_IN_CHECK) :
+                new MoveTransition(this.board, transitionedBoard, move, MoveStatus.DONE);
     }
+
+    public MoveTransition unMakeMove(final Move move) {
+        // TODO: implement undo method
+        return new MoveTransition(this.board, this.board, move, MoveStatus.DONE);
+    }
+
 
     public abstract Collection<Piece> getActivePieces();
     public abstract Alliance getAlliance();
