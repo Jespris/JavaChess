@@ -5,7 +5,7 @@ import com.chess.engine.board.Move;
 
 public class RandomMove implements MoveStrategy {
     @Override
-    public Move execute(Board board, int depth) {
+    public Move execute(Board board) {
         return null;
     }
 }
