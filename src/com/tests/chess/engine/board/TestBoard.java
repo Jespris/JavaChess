@@ -5,11 +5,11 @@ import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.pieces.Piece;
 import com.google.common.collect.Iterables;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TestBoard {
+public class TestBoard {
     @Test
     public void initialBoard(){
         final Board board = Board.createStandardBoard();
@@ -37,14 +37,14 @@ class TestBoard {
 
     @Test
     public void testAlgebraicNotation() {
-        assertEquals(BoardUtils.INSTANCE.getChessNotationAtCoordinate(0), "a8");
-        assertEquals(BoardUtils.INSTANCE.getChessNotationAtCoordinate(1), "b8");
-        assertEquals(BoardUtils.INSTANCE.getChessNotationAtCoordinate(2), "c8");
-        assertEquals(BoardUtils.INSTANCE.getChessNotationAtCoordinate(3), "d8");
-        assertEquals(BoardUtils.INSTANCE.getChessNotationAtCoordinate(4), "e8");
-        assertEquals(BoardUtils.INSTANCE.getChessNotationAtCoordinate(5), "f8");
-        assertEquals(BoardUtils.INSTANCE.getChessNotationAtCoordinate(6), "g8");
-        assertEquals(BoardUtils.INSTANCE.getChessNotationAtCoordinate(7), "h8");
+        assertEquals(BoardUtils.getChessNotationAtCoordinate(0), "a8");
+        assertEquals(BoardUtils.getChessNotationAtCoordinate(1), "b8");
+        assertEquals(BoardUtils.getChessNotationAtCoordinate(2), "c8");
+        assertEquals(BoardUtils.getChessNotationAtCoordinate(3), "d8");
+        assertEquals(BoardUtils.getChessNotationAtCoordinate(4), "e8");
+        assertEquals(BoardUtils.getChessNotationAtCoordinate(5), "f8");
+        assertEquals(BoardUtils.getChessNotationAtCoordinate(6), "g8");
+        assertEquals(BoardUtils.getChessNotationAtCoordinate(7), "h8");
     }
 
     @Test
@@ -56,6 +56,5 @@ class TestBoard {
         Board board = Board.createStandardBoard();
         end =  runtime.freeMemory();
         System.out.println("That took " + (start-end) + " bytes.");
-
     }
 }

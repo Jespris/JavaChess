@@ -4,9 +4,10 @@ import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.player.MoveTransition;
+import com.chess.engine.player.ai.AlphaBetaWithMoveSorting;
 import com.chess.engine.player.ai.MiniMax;
 import com.chess.engine.player.ai.MoveStrategy;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -293,7 +294,7 @@ public class TestCastling {
                                 BoardUtils.getCoordinateAtPosition("c3")));
         assertTrue(t11.getMoveStatus().isDone());
 
-        final MoveStrategy moveStrategy = new MiniMax(4);
+        final MoveStrategy moveStrategy = new AlphaBetaWithMoveSorting(5, false);
 
         moveStrategy.execute(t11.getToBoard());
     }

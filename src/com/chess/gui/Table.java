@@ -47,6 +47,7 @@ public class Table extends Observable {
     private final MoveLog moveLog;
 
     private final GameSetup gameSetup;
+    private final TimeControlSetup timeControlSetup;
 
     private Piece sourcePiece;
     private Piece humanMovePiece;
@@ -90,6 +91,7 @@ public class Table extends Observable {
         this.addObserver(new TableGameAIWatcher());
 
         this.gameSetup = new GameSetup(this.gameFrame, true);
+        this.timeControlSetup = new TimeControlSetup(this.gameFrame, true);
 
         this.boardDirection = BoardDirection.NORMAL;
         this.highlightLegalMoves = false;
@@ -123,6 +125,8 @@ public class Table extends Observable {
         return this.gameSetup;
     }
 
+    private TimeControlSetup getTimeControlSetup() { return this.timeControlSetup; }
+
     private void setupUpdate(final GameSetup gameSetup){
         setChanged();
         notifyObservers(gameSetup);
@@ -146,11 +150,17 @@ public class Table extends Observable {
 
             if (Table.get().getGameBoard().currentPlayer().isInCheckMate()){
                 System.out.println("Game over! " + Table.get().getGameBoard().currentPlayer().toString() + " is checkmated!");
-                // TODO: add Displaypanel
+                JOptionPane.showMessageDialog(
+                        Table.get().getBoardPanel(),
+                        "Game Over: Player " + Table.get().getGameBoard().currentPlayer() + " is in checkmate!", "Game Over",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
             if (Table.get().getGameBoard().currentPlayer().isInStaleMate()){
                 System.out.println("Game over by stalemate!");
-                // TODO: add Displaypanel
+                JOptionPane.showMessageDialog(
+                        Table.get().getBoardPanel(),
+                        "Game Over: Player " + Table.get().getGameBoard().currentPlayer() + " is in stalemate!", "Game Over",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
         }
 
@@ -229,6 +239,11 @@ public class Table extends Observable {
         tableMenuBar.add(createPreferencesMenu());
         tableMenuBar.add(createOptionsMenu());
         return tableMenuBar;
+    }
+
+    private void timeControlSetupUpdate(TimeControlSetup timeControlSetup) {
+        setChanged();
+        notifyObservers(timeControlSetup);
     }
 
     private JMenu createFileMenu() {
@@ -399,6 +414,7 @@ public class Table extends Observable {
 
     private JMenu createOptionsMenu() {
         final JMenu optionsMenu = new JMenu("Options");
+
         final JMenuItem setupGameMenuItem = new JMenuItem("Setup Game");
         setupGameMenuItem.addActionListener(new ActionListener() {
             @Override
@@ -407,8 +423,18 @@ public class Table extends Observable {
                 Table.get().setupUpdate(Table.get().getGameSetup());
             }
         });
-
         optionsMenu.add(setupGameMenuItem);
+
+        final JMenuItem setupTimeControls = new JMenuItem("Time controls");
+        setupTimeControls.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Table.get().getTimeControlSetup().promptUser();
+                Table.get().timeControlSetupUpdate(Table.get().getTimeControlSetup());
+            }
+        });
+        optionsMenu.add(setupTimeControls);
+
         return optionsMenu;
     }
 

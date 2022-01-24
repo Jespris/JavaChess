@@ -4,10 +4,8 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
-import com.chess.engine.board.Move.AttackMove;
 import com.chess.engine.board.Move.MajorAttackMove;
 import com.chess.engine.board.Move.MajorMove;
-import com.chess.engine.board.Tile;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -21,17 +19,17 @@ public class King extends Piece{
     private final boolean kingSideCastleCapable;
     private final boolean queenSideCastleCapable;
 
-    public King(final int piecePosition, final Alliance pieceAlliance,
+    public King(final Alliance pieceAlliance, final int piecePosition,
                 final boolean kingSideCastleCapable, final boolean queenSideCastleCapable) {
-        super(PieceType.KING, piecePosition, pieceAlliance, true);
+        super(PieceType.KING, pieceAlliance, piecePosition, true);
         this.isCastled = false;
         this.kingSideCastleCapable = kingSideCastleCapable;
         this.queenSideCastleCapable = queenSideCastleCapable;
     }
 
-    public King(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove,
+    public King(final Alliance pieceAlliance, final int piecePosition, final boolean isFirstMove,
                 final boolean isCastled, final boolean kingSideCastleCapable, final boolean queenSideCastleCapable){
-        super(PieceType.KING, piecePosition, pieceAlliance, isFirstMove);
+        super(PieceType.KING, pieceAlliance, piecePosition, isFirstMove);
         this.isCastled = isCastled;
         this.kingSideCastleCapable = kingSideCastleCapable;
         this.queenSideCastleCapable = queenSideCastleCapable;
@@ -81,7 +79,7 @@ public class King extends Piece{
 
     @Override
     public King movePiece(final Move move) {
-        return new King(move.getDestination(), move.getPieceMoved().getPieceAlliance(), false, move.isCastlingMove(), false, false);
+        return new King(move.getPieceMoved().getPieceAlliance(), move.getDestination(), false, move.isCastlingMove(), false, false);
     }
 
     @Override

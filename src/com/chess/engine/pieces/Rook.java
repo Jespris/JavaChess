@@ -4,10 +4,8 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
-import com.chess.engine.board.Move.AttackMove;
 import com.chess.engine.board.Move.MajorAttackMove;
 import com.chess.engine.board.Move.MajorMove;
-import com.chess.engine.board.Tile;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -17,12 +15,12 @@ import java.util.List;
 public class Rook extends Piece{
     private final static int[] ROOK_VECTORS = {-8, -1, 1, 8};
 
-    public Rook(final int piecePosition, final Alliance pieceAlliance) {
-        super(PieceType.ROOK, piecePosition, pieceAlliance, true);
+    public Rook(final Alliance pieceAlliance, final int piecePosition) {
+        super(PieceType.ROOK, pieceAlliance, piecePosition, true);
     }
 
-    public Rook(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove){
-        super(PieceType.ROOK, piecePosition, pieceAlliance, isFirstMove);
+    public Rook(final Alliance pieceAlliance, final int piecePosition, final boolean isFirstMove){
+        super(PieceType.ROOK, pieceAlliance, piecePosition, isFirstMove);
 
     }
 
@@ -67,7 +65,7 @@ public class Rook extends Piece{
 
     @Override
     public Rook movePiece(final Move move) {
-        return new Rook(move.getDestination(), move.getPieceMoved().getPieceAlliance());
+        return new Rook(move.getPieceMoved().getPieceAlliance(), move.getDestination());
     }
 
     @Override

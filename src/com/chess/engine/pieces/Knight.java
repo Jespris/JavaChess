@@ -3,10 +3,8 @@ package com.chess.engine.pieces;
 import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
-import com.chess.engine.board.Move.AttackMove;
 import com.chess.engine.board.Move.MajorAttackMove;
 import com.chess.engine.board.Move.MajorMove;
-import com.chess.engine.board.Tile;
 import com.chess.engine.board.Move;
 import com.google.common.collect.ImmutableList;
 
@@ -17,12 +15,12 @@ public class Knight extends Piece{
 
     private final static int[] knightJumps = {-17, -15, -10, -6, 6, 10, 15, 17};
 
-    public Knight(final int piecePosition, final Alliance pieceAlliance) {
-        super(PieceType.KNIGHT, piecePosition, pieceAlliance, true);
+    public Knight(final Alliance pieceAlliance, final int piecePosition) {
+        super(PieceType.KNIGHT, pieceAlliance, piecePosition, true);
     }
 
-    public Knight(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove){
-        super(PieceType.KNIGHT, piecePosition, pieceAlliance, isFirstMove);
+    public Knight(final Alliance pieceAlliance, final int piecePosition, final boolean isFirstMove){
+        super(PieceType.KNIGHT, pieceAlliance, piecePosition, isFirstMove);
 
     }
 
@@ -65,7 +63,7 @@ public class Knight extends Piece{
 
     @Override
     public Knight movePiece(final Move move) {
-        return new Knight(move.getDestination(), move.getPieceMoved().getPieceAlliance());
+        return new Knight(move.getPieceMoved().getPieceAlliance(), move.getDestination());
     }
 
     @Override

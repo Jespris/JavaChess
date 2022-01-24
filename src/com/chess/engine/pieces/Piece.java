@@ -5,7 +5,6 @@ import com.chess.engine.board.Board;
 import com.chess.engine.board.Move;
 
 import java.util.Collection;
-import java.util.List;
 
 public abstract class Piece {
 
@@ -16,8 +15,8 @@ public abstract class Piece {
     private final int cashedHashCode;
 
     Piece(final PieceType pieceType,
-          final int piecePosition,
           final Alliance pieceAlliance,
+          final int piecePosition,
           final boolean isFirstMove){
         this.pieceType = pieceType;
         this.piecePosition = piecePosition;

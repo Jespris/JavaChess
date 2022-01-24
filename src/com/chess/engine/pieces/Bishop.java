@@ -4,10 +4,8 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
-import com.chess.engine.board.Move.AttackMove;
 import com.chess.engine.board.Move.MajorAttackMove;
 import com.chess.engine.board.Move.MajorMove;
-import com.chess.engine.board.Tile;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -17,12 +15,12 @@ import java.util.List;
 public class Bishop extends Piece{
     private final static int[] BISHOP_VECTORS = {-9, -7, 7, 9};
 
-    public Bishop(final int piecePosition, final Alliance pieceAlliance) {
-        super(PieceType.BISHOP, piecePosition, pieceAlliance, true);
+    public Bishop(final Alliance pieceAlliance, final int piecePosition) {
+        super(PieceType.BISHOP, pieceAlliance, piecePosition, true);
     }
 
-    public Bishop(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove){
-        super(PieceType.BISHOP, piecePosition, pieceAlliance, isFirstMove);
+    public Bishop(final Alliance pieceAlliance, final int piecePosition, final boolean isFirstMove){
+        super(PieceType.BISHOP, pieceAlliance, piecePosition, isFirstMove);
 
     }
 
@@ -62,7 +60,7 @@ public class Bishop extends Piece{
 
     @Override
     public Bishop movePiece(final Move move) {
-        return new Bishop(move.getDestination(), move.getPieceMoved().getPieceAlliance());
+        return new Bishop(move.getPieceMoved().getPieceAlliance(), move.getDestination());
     }
 
     @Override

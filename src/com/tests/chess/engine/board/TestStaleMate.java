@@ -4,15 +4,12 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.Board.Builder;
 import com.chess.engine.board.BoardUtils;
-import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.MoveFactory;
 import com.chess.engine.pieces.Bishop;
 import com.chess.engine.pieces.King;
 import com.chess.engine.pieces.Pawn;
-import com.chess.engine.pieces.Piece;
 import com.chess.engine.player.MoveTransition;
-import com.google.common.collect.Iterables;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,13 +19,13 @@ public class TestStaleMate {
 
         final Builder builder = new Builder();
         // Black Layout
-        builder.setPiece(new Pawn( 14, Alliance.BLACK));
-        builder.setPiece(new Pawn( 21, Alliance.BLACK));
-        builder.setPiece(new King(36, Alliance.BLACK, false, false));
+        builder.setPiece(new Pawn(Alliance.BLACK, 14));
+        builder.setPiece(new Pawn(Alliance.BLACK, 21));
+        builder.setPiece(new King(Alliance.BLACK, 36, false, false));
         // White Layout
-        builder.setPiece(new Pawn(29, Alliance.WHITE));
-        builder.setPiece(new King(31, Alliance.WHITE, false, false));
-        builder.setPiece(new Pawn(39, Alliance.WHITE));
+        builder.setPiece(new Pawn(Alliance.WHITE, 29));
+        builder.setPiece(new King(Alliance.WHITE, 31, false, false));
+        builder.setPiece(new Pawn(Alliance.WHITE, 39));
         // Set the current player
         builder.setMoveMaker(Alliance.BLACK);
         final Board board = builder.build();
@@ -46,10 +43,10 @@ public class TestStaleMate {
     public void testAnonymousStaleMate() {
         final Builder builder = new Builder();
         // Black Layout
-        builder.setPiece(new King(2, Alliance.BLACK, false, false));
+        builder.setPiece(new King(Alliance.BLACK, 2, false, false));
         // White Layout
-        builder.setPiece(new Pawn(10, Alliance.WHITE));
-        builder.setPiece(new King(26, Alliance.WHITE, false, false));
+        builder.setPiece(new Pawn(Alliance.WHITE, 10));
+        builder.setPiece(new King(Alliance.WHITE, 26, false, false));
         // Set the current player
         builder.setMoveMaker(Alliance.WHITE);
         final Board board = builder.build();
@@ -67,11 +64,11 @@ public class TestStaleMate {
     public void testAnonymousStaleMate2() {
         final Builder builder = new Builder();
         // Black Layout
-        builder.setPiece(new King(0, Alliance.BLACK, false, false));
+        builder.setPiece(new King(Alliance.BLACK, 0, false, false));
         // White Layout
-        builder.setPiece(new Pawn(16, Alliance.WHITE));
-        builder.setPiece(new King(17, Alliance.WHITE, false, false));
-        builder.setPiece(new Bishop(19, Alliance.WHITE));
+        builder.setPiece(new Pawn(Alliance.WHITE, 16));
+        builder.setPiece(new King(Alliance.WHITE, 17, false, false));
+        builder.setPiece(new Bishop(Alliance.WHITE, 19));
         // Set the current player
         builder.setMoveMaker(Alliance.WHITE);
         final Board board = builder.build();

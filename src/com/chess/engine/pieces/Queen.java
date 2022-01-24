@@ -4,10 +4,8 @@ import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
-import com.chess.engine.board.Move.AttackMove;
 import com.chess.engine.board.Move.MajorAttackMove;
 import com.chess.engine.board.Move.MajorMove;
-import com.chess.engine.board.Tile;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -17,12 +15,12 @@ import java.util.List;
 public class Queen extends Piece{
     private final static int[] QUEEN_VECTORS = {-9, -8, -7, -1, 1, 7, 8, 9};
 
-    public Queen(final int piecePosition, final Alliance pieceAlliance) {
-        super(PieceType.QUEEN, piecePosition, pieceAlliance, true);
+    public Queen(final Alliance pieceAlliance, final int piecePosition) {
+        super(PieceType.QUEEN, pieceAlliance, piecePosition, true);
     }
 
-    public Queen(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove){
-        super(PieceType.QUEEN, piecePosition, pieceAlliance, isFirstMove);
+    public Queen(final Alliance pieceAlliance, final int piecePosition, final boolean isFirstMove){
+        super(PieceType.QUEEN, pieceAlliance, piecePosition, isFirstMove);
     }
 
     @Override
@@ -66,7 +64,7 @@ public class Queen extends Piece{
 
     @Override
     public Queen movePiece(final Move move) {
-        return new Queen(move.getDestination(), move.getPieceMoved().getPieceAlliance());
+        return new Queen(move.getPieceMoved().getPieceAlliance(), move.getDestination());
     }
 
     @Override

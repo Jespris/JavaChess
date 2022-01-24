@@ -39,52 +39,52 @@ public class FenUtilities {
         while (i < boardTiles.length) {
             switch (boardTiles[i]) {
                 case 'r':
-                    builder.setPiece(new Rook(i, Alliance.BLACK));
+                    builder.setPiece(new Rook(Alliance.BLACK, i));
                     i++;
                     break;
                 case 'n':
-                    builder.setPiece(new Knight(i, Alliance.BLACK));
+                    builder.setPiece(new Knight(Alliance.BLACK, i));
                     i++;
                     break;
                 case 'b':
-                    builder.setPiece(new Bishop(i, Alliance.BLACK));
+                    builder.setPiece(new Bishop(Alliance.BLACK, i));
                     i++;
                     break;
                 case 'q':
-                    builder.setPiece(new Queen(i, Alliance.BLACK));
+                    builder.setPiece(new Queen(Alliance.BLACK, i));
                     i++;
                     break;
                 case 'k':
                     final boolean isCastled = !blackKingSideCastle && !blackQueenSideCastle;
-                    builder.setPiece(new King(i, Alliance.BLACK, blackKingSideCastle, blackQueenSideCastle));
+                    builder.setPiece(new King(Alliance.BLACK, i, blackKingSideCastle, blackQueenSideCastle));
                     i++;
                     break;
                 case 'p':
-                    builder.setPiece(new Pawn(i, Alliance.BLACK));
+                    builder.setPiece(new Pawn(Alliance.BLACK, i));
                     i++;
                     break;
                 case 'R':
-                    builder.setPiece(new Rook(i, Alliance.WHITE));
+                    builder.setPiece(new Rook(Alliance.WHITE, i));
                     i++;
                     break;
                 case 'N':
-                    builder.setPiece(new Knight(i, Alliance.WHITE));
+                    builder.setPiece(new Knight(Alliance.WHITE, i));
                     i++;
                     break;
                 case 'B':
-                    builder.setPiece(new Bishop(i, Alliance.WHITE));
+                    builder.setPiece(new Bishop(Alliance.WHITE, i));
                     i++;
                     break;
                 case 'Q':
-                    builder.setPiece(new Queen(i, Alliance.WHITE));
+                    builder.setPiece(new Queen(Alliance.WHITE, i));
                     i++;
                     break;
                 case 'K':
-                    builder.setPiece(new King(i, Alliance.WHITE, whiteKingSideCastle, whiteQueenSideCastle));
+                    builder.setPiece(new King(Alliance.WHITE, i, whiteKingSideCastle, whiteQueenSideCastle));
                     i++;
                     break;
                 case 'P':
-                    builder.setPiece(new Pawn(i, Alliance.WHITE));
+                    builder.setPiece(new Pawn(Alliance.WHITE, i));
                     i++;
                     break;
                 case '-':
@@ -104,7 +104,7 @@ public class FenUtilities {
     private static Pawn getEnPassantFromFEN(final String fenPartition, final Alliance alliance) {
         if (!Objects.equals(fenPartition, "-")){
             final int coordinate = BoardUtils.getCoordinateAtPosition(fenPartition) + 8 * alliance.getDirection();
-            return new Pawn(coordinate, alliance.oppositeAlliance());
+            return new Pawn(alliance.oppositeAlliance(), coordinate);
         }
         return null;
     }

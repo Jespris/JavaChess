@@ -1,5 +1,6 @@
 package com.chess.engine.player.ai;
 
+import com.chess.engine.Alliance;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.pieces.King;
@@ -29,7 +30,17 @@ public final class StandardBoardEvaluator implements BoardEvaluator{
 
     @Override
     public int evaluate(final Board board, final int depth) {
-        return scorePlayer(board, board.whitePlayer(), depth) - scorePlayer(board, board.blackPlayer(), depth);
+        if (board.currentPlayer().isInStaleMate()){
+            return 0;
+        } else if (board.currentPlayer().isInCheckMate()){
+            if (board.currentPlayer().getAlliance() == Alliance.WHITE){
+                return -10000;
+            } else {
+                return 10000;
+            }
+        } else {
+            return scorePlayer(board, board.whitePlayer(), depth) - scorePlayer(board, board.blackPlayer(), depth);
+        }
     }
 
     private int scorePlayer(final Board board, final Player player, final int depth) {

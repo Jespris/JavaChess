@@ -15,12 +15,12 @@ public class Pawn extends Piece{
 
     private final static int[] PAWN_VECTORS = {7, 8, 9, 16};
 
-    public Pawn(final int piecePosition, final Alliance pieceAlliance) {
-        super(PieceType.PAWN, piecePosition, pieceAlliance, true);
+    public Pawn(final Alliance pieceAlliance, final int piecePosition) {
+        super(PieceType.PAWN, pieceAlliance, piecePosition, true);
     }
 
-    public Pawn(final int piecePosition, final Alliance pieceAlliance, final boolean isFirstMove){
-        super(PieceType.PAWN, piecePosition, pieceAlliance, isFirstMove);
+    public Pawn(final Alliance pieceAlliance, final int piecePosition, final boolean isFirstMove){
+        super(PieceType.PAWN, pieceAlliance, piecePosition, isFirstMove);
 
     }
 
@@ -107,7 +107,7 @@ public class Pawn extends Piece{
 
     @Override
     public Pawn movePiece(final Move move) {
-        return new Pawn(move.getDestination(), move.getPieceMoved().getPieceAlliance());
+        return new Pawn(move.getPieceMoved().getPieceAlliance(), move.getDestination());
     }
 
     @Override
@@ -117,6 +117,6 @@ public class Pawn extends Piece{
 
     public Piece getPromotionPiece(){
         // TODO: implement promoting to different pieces
-        return new Queen(this.piecePosition, this.pieceAlliance, false);
+        return new Queen(this.pieceAlliance, this.piecePosition, false);
     }
 }
