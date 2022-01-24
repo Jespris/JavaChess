@@ -89,7 +89,7 @@ public enum BoardUtils {
                 piece.getPieceAlliance() != king.getPieceAlliance();
     }
 
-    public static boolean isThreatenedBoardImmediate(final Board board) {
+    public static boolean eitherPlayerInCheck(final Board board) {
         return board.whitePlayer().isInCheck() || board.blackPlayer().isInCheck();
     }
 
