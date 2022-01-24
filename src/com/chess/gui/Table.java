@@ -146,7 +146,7 @@ public class Table extends Observable {
             @Override
             protected Move doInBackground() throws Exception{
 
-                final MoveStrategy strategy = new AlphaBetaWithMoveSorting(8, false);
+                final MoveStrategy strategy = new AlphaBetaWithMoveSorting(5, false);
 
                 final Move bestMove = strategy.execute(Table.get().getGameBoard());
 

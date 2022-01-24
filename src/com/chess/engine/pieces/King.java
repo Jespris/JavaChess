@@ -52,7 +52,6 @@ public class King extends Piece{
     @Override
     public Collection<Move> calculateLegalMoves(Board board) {
         final List<Move> legalMoves = new ArrayList<>();
-
         for (final int kingVector: KING_VECTORS){
             if (isFirstColumnExclusion(this.piecePosition, kingVector) ||
                     isEightColumnExclusion(this.piecePosition, kingVector)){
@@ -91,11 +90,11 @@ public class King extends Piece{
     }
 
     // Some king vectors are wrong at the edge of the boards, exclude those when adding legal moves
-    private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset){
+    public boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset){
         return BoardUtils.FIRST_COLUMN[currentPosition] && (candidateOffset == -1 || candidateOffset == -9 || candidateOffset == 7);
     }
 
-    private static boolean isEightColumnExclusion(final int currentPosition, final int candidateOffset){
+    public boolean isEightColumnExclusion(final int currentPosition, final int candidateOffset){
         return BoardUtils.EIGHT_COLUMN[currentPosition] && (candidateOffset == 1 || candidateOffset == 9 || candidateOffset == -7);
     }
 }
