@@ -13,7 +13,7 @@ class GameSetup extends JDialog {
 
     private PlayerType whitePlayerType;
     private PlayerType blackPlayerType;
-    private JSpinner searchDepthSpinner;
+    private JSpinner searchTimeSpinner;
 
     private static final String HUMAN_TEXT = "Human";
     private static final String COMPUTER_TEXT = "Computer";
@@ -46,7 +46,7 @@ class GameSetup extends JDialog {
         myPanel.add(blackComputerButton);
 
         myPanel.add(new JLabel("Search"));
-        this.searchDepthSpinner = addLabeledSpinner(myPanel, "Search Depth", new SpinnerNumberModel(6, 0, Integer.MAX_VALUE, 1));
+        this.searchTimeSpinner = addLabeledSpinner(myPanel, new SpinnerNumberModel(5, 0, Integer.MAX_VALUE, 1));
 
         final JButton cancelButton = new JButton("Cancel");
         final JButton okButton = new JButton("OK");
@@ -94,10 +94,15 @@ class GameSetup extends JDialog {
         return this.blackPlayerType;
     }
 
+    public void reset(){
+        this.searchTimeSpinner.setValue(5);
+        this.whitePlayerType = PlayerType.HUMAN;
+        this.blackPlayerType = PlayerType.HUMAN;
+    }
+
     private static JSpinner addLabeledSpinner(final Container c,
-                                              final String label,
                                               final SpinnerModel model) {
-        final JLabel l = new JLabel(label);
+        final JLabel l = new JLabel("Minimum search time (s)");
         c.add(l);
         final JSpinner spinner = new JSpinner(model);
         l.setLabelFor(spinner);
@@ -106,6 +111,6 @@ class GameSetup extends JDialog {
     }
 
     int getSearchDepth() {
-        return (Integer)this.searchDepthSpinner.getValue();
+        return (Integer)this.searchTimeSpinner.getValue();
     }
 }

@@ -24,7 +24,7 @@ public class TakenPiecesPanel extends JPanel {
     private static final EtchedBorder PANEL_BORDER = new EtchedBorder(EtchedBorder.RAISED);
     private static final Color PANEL_COLOR = Color.decode("0xFDF5E6");
     private static final Dimension TAKEN_PIECES_DIMENSION = new Dimension(40, 80);
-    private static final String defaultPieceImagePath = "art/ChessPiecesGif/";
+    private static final String defaultPieceImagePath = "art/ChessPieces/";
 
     public TakenPiecesPanel(){
         super(new BorderLayout());

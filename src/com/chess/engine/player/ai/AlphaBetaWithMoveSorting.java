@@ -12,6 +12,7 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Ordering;
 
+import javax.swing.*;
 import java.util.*;
 
 public class AlphaBetaWithMoveSorting extends Observable implements MoveStrategy {

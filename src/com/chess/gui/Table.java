@@ -59,19 +59,21 @@ public class Table extends Observable {
     private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(600, 600);
     private final static Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
     private final static Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
-    private static final String defaultPieceImagePath = "art/ChessPiecesGif/";
 
-    private final Color lightTileColor = new Color(238,238,210);
-    private final Color darkTileColor = new Color(118,150,86);
+    private String pieceIconPath;
+
+    private Color lightTileColor = new Color(238,238,210);
+    private Color darkTileColor = new Color(118,150,86);
 
     enum PlayerType{
         HUMAN,
         COMPUTER
     }
 
-    private static final Table INSTANCE = new Table();
+    private static Table INSTANCE = new Table();
 
     private Table(){
+        this.pieceIconPath = getDefaultPieceIconPath();
         this.gameFrame = new JFrame("JavaChess");
         this.gameFrame.setLayout(new BorderLayout());
         final JMenuBar tableMenuBar = createTableMenuBar();
@@ -96,6 +98,14 @@ public class Table extends Observable {
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
         this.gameFrame.setVisible(true);
+    }
+
+    private String getDefaultPieceIconPath() {
+        return "art/ChessPieces/";
+    }
+
+    public void reset(){
+        INSTANCE = new Table();
     }
 
     public void show(){
@@ -136,9 +146,11 @@ public class Table extends Observable {
 
             if (Table.get().getGameBoard().currentPlayer().isInCheckMate()){
                 System.out.println("Game over! " + Table.get().getGameBoard().currentPlayer().toString() + " is checkmated!");
+                // TODO: add Displaypanel
             }
             if (Table.get().getGameBoard().currentPlayer().isInStaleMate()){
                 System.out.println("Game over by stalemate!");
+                // TODO: add Displaypanel
             }
         }
 
@@ -150,33 +162,30 @@ public class Table extends Observable {
 
             @Override
             protected Move doInBackground() throws Exception{
-
-                final MoveStrategy strategy = new AlphaBetaWithMoveSorting(5, false);
-
-                final Move bestMove = strategy.execute(Table.get().getGameBoard());
-
-                return bestMove;
+                final MoveStrategy strategy = new AlphaBetaWithMoveSorting(Table.get().getGameSetup().getSearchDepth(), false);
+                if (isCancelled()){
+                    System.out.println("bestMoveFinder cancelled!");
+                    return null;
+                }
+                return strategy.execute(Table.get().getGameBoard());
             }
 
             @Override
             public void done(){
                 try{
                     final Move bestMove = get();
-
-                    Table.get().updateComputerMove(bestMove);
-                    Table.get().updateGameBoard(Table.get().getGameBoard().currentPlayer().makeMove(bestMove).getToBoard());
-                    Table.get().getMoveLog().addMove(bestMove);
-                    Table.get().getGameHistoryPanel().redo(Table.get().getGameBoard(), Table.get().getMoveLog());
-                    Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
-                    Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
-                    Table.get().moveMadeUpdate(PlayerType.COMPUTER);
-
-                } catch (InterruptedException e){
-                    e.printStackTrace();
-                } catch (ExecutionException e){
+                    if (bestMove != null) {
+                        Table.get().updateComputerMove(bestMove);
+                        Table.get().updateGameBoard(Table.get().getGameBoard().currentPlayer().makeMove(bestMove).getToBoard());
+                        Table.get().getMoveLog().addMove(bestMove);
+                        Table.get().getGameHistoryPanel().redo(Table.get().getGameBoard(), Table.get().getMoveLog());
+                        Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
+                        Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
+                        Table.get().moveMadeUpdate(PlayerType.COMPUTER);
+                    }
+                } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }
-
             }
         }
     }
@@ -265,6 +274,15 @@ public class Table extends Observable {
         });
         fileMenu.add(saveToPGN);
 
+        final JMenuItem newGameItem = new JMenuItem("New Game");
+        newGameItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                Table.get().reset();
+            }
+        });
+        fileMenu.add(newGameItem);
+
         final JMenuItem exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.addActionListener(new ActionListener() {
             @Override
@@ -310,25 +328,72 @@ public class Table extends Observable {
 
     private JMenu createPreferencesMenu(){
         final JMenu preferencesMenu = new JMenu("Preferences");
-        final JMenuItem flipBoardMenuItem = new JMenuItem("Flip Board");
-        flipBoardMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                boardDirection = boardDirection.opposite();
-                boardPanel.drawBoard(chessBoard);
+
+        final JMenu colorChooserSubMenu = new JMenu("Choose Colors");
+
+        final JMenuItem chooseDarkMenuItem = new JMenuItem("Choose Dark Tile Color");
+        colorChooserSubMenu.add(chooseDarkMenuItem);
+
+        final JMenuItem chooseLightMenuItem = new JMenuItem("Choose Light Tile Color");
+        colorChooserSubMenu.add(chooseLightMenuItem);
+
+        final JMenuItem chooseLegalHighlightMenuItem = new JMenuItem(
+                "Choose Legal Move Highlight Color");
+        colorChooserSubMenu.add(chooseLegalHighlightMenuItem);
+
+        preferencesMenu.add(colorChooserSubMenu);
+
+        chooseDarkMenuItem.addActionListener(e -> {
+            final Color colorChoice = JColorChooser.showDialog(Table.get().getGameFrame(), "Choose Dark Tile Color",
+                    Table.get().getGameFrame().getBackground());
+            if (colorChoice != null) {
+                Table.get().getBoardPanel().setTileDarkColor(chessBoard, colorChoice);
             }
         });
+
+        chooseLightMenuItem.addActionListener(e -> {
+            final Color colorChoice = JColorChooser.showDialog(Table.get().getGameFrame(), "Choose Light Tile Color",
+                    Table.get().getGameFrame().getBackground());
+            if (colorChoice != null) {
+                Table.get().getBoardPanel().setTileLightColor(chessBoard, colorChoice);
+            }
+        });
+
+        final JMenu chessMenChoiceSubMenu = new JMenu("Choose Chess Men Image Set");
+
+        final JMenuItem defaultSetMenuItem = new JMenuItem("Default Set");
+        chessMenChoiceSubMenu.add(defaultSetMenuItem);
+
+        defaultSetMenuItem.addActionListener(e -> {
+            pieceIconPath = "art/simple/";
+            Table.get().getBoardPanel().drawBoard(chessBoard);
+        });
+
+        preferencesMenu.add(chessMenChoiceSubMenu);
+
+        chooseLegalHighlightMenuItem.addActionListener(e -> {
+            System.out.println("implement me");
+            Table.get().getGameFrame().repaint();
+        });
+
+        final JMenuItem flipBoardMenuItem = new JMenuItem("Flip board");
+
+        flipBoardMenuItem.addActionListener(e -> {
+            boardDirection = boardDirection.opposite();
+            boardPanel.drawBoard(chessBoard);
+        });
+
         preferencesMenu.add(flipBoardMenuItem);
         preferencesMenu.addSeparator();
 
-        final JCheckBoxMenuItem legalMoveHighlighterCheckbox = new JCheckBoxMenuItem("Highlight Legal Moves", false);
-        legalMoveHighlighterCheckbox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                highlightLegalMoves = legalMoveHighlighterCheckbox.isSelected();
-            }
-        });
-        preferencesMenu.add(legalMoveHighlighterCheckbox);
+
+        final JCheckBoxMenuItem cbLegalMoveHighlighter = new JCheckBoxMenuItem(
+                "Highlight Legal Moves", false);
+
+        cbLegalMoveHighlighter.addActionListener(e -> highlightLegalMoves = cbLegalMoveHighlighter.isSelected());
+
+        preferencesMenu.add(cbLegalMoveHighlighter);
+
         return preferencesMenu;
     }
 
@@ -371,6 +436,22 @@ public class Table extends Observable {
             }
             validate();
             repaint();
+        }
+
+        void setTileDarkColor(final Board board,
+                              final Color darkColor) {
+            for (final TilePanel boardTile : boardTiles) {
+                boardTile.setDarkTileColor(darkColor);
+            }
+            drawBoard(board);
+        }
+
+        void setTileLightColor(final Board board,
+                               final Color lightColor) {
+            for (final TilePanel boardTile : boardTiles) {
+                boardTile.setLightTileColor(lightColor);
+            }
+            drawBoard(board);
         }
     }
 
@@ -487,12 +568,20 @@ public class Table extends Observable {
                     final String pieceString = board.getPiece(this.tileID).getPieceAlliance().toString().charAt(0) + "" +
                             board.getPiece(this.tileID).toString();
                     final BufferedImage image = ImageIO.read(
-                            new File(defaultPieceImagePath + pieceString + ".gif"));
+                            new File(pieceIconPath + pieceString + ".gif"));
                     add(new JLabel(new ImageIcon(image)));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+        }
+
+        void setLightTileColor(final Color color) {
+            lightTileColor = color;
+        }
+
+        void setDarkTileColor(final Color color) {
+            darkTileColor = color;
         }
 
         private void assignTileColor() {
