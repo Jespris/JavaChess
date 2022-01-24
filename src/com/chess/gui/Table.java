@@ -11,24 +11,29 @@ import com.chess.engine.player.MoveTransition;
 import com.chess.engine.player.ai.AlphaBetaWithMoveSorting;
 import com.chess.engine.player.ai.MiniMax;
 import com.chess.engine.player.ai.MoveStrategy;
+import com.chess.pgn.FenUtilities;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import static com.chess.pgn.PGNUtilities.writeGameToPGNFile;
 import static javax.swing.SwingUtilities.isLeftMouseButton;
 import static javax.swing.SwingUtilities.isRightMouseButton;
 
@@ -185,6 +190,10 @@ public class Table extends Observable {
         return this.boardPanel;
     }
 
+    private JFrame getGameFrame(){
+        return this.gameFrame;
+    }
+
     private TakenPiecesPanel getTakenPiecesPanel() {
         return this.takenPiecesPanel;
     }
@@ -216,13 +225,45 @@ public class Table extends Observable {
     private JMenu createFileMenu() {
         final JMenu fileMenu = new JMenu("File");
         final JMenuItem openPGN = new JMenuItem("Load PGN File");
-        openPGN.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                System.out.println("open up that pgn file!");
+        openPGN.addActionListener(e -> {
+            JFileChooser chooser = new JFileChooser();
+            int option = chooser.showOpenDialog(Table.get().getGameFrame());
+            if (option == JFileChooser.APPROVE_OPTION){
+                loadPGNFile(chooser.getSelectedFile());
             }
         });
         fileMenu.add(openPGN);
+
+        final JMenuItem openFEN = new JMenuItem("Load FEN File");
+        openFEN.addActionListener(e ->  {
+            String fenString = JOptionPane.showInputDialog("Input FEN");
+            if (fenString != null){
+                clearBoard();
+                chessBoard = FenUtilities.createGameFromFEN(fenString);
+                Table.get().getBoardPanel().drawBoard(chessBoard);
+            }
+        });
+        fileMenu.add(openFEN);
+
+        final JMenuItem saveToPGN = new JMenuItem("Save Game");
+        saveToPGN.addActionListener(e -> {
+            final JFileChooser chooser = new JFileChooser();
+            chooser.setFileFilter(new FileFilter() {
+                @Override
+                public String getDescription() {
+                    return ".pgn";
+                }
+                @Override
+                public boolean accept(final File file) {
+                    return file.isDirectory() || file.getName().toLowerCase().endsWith("pgn");
+                }
+            });
+            final int option = chooser.showSaveDialog(Table.get().getGameFrame());
+            if (option == JFileChooser.APPROVE_OPTION) {
+                savePGNFile(chooser.getSelectedFile());
+            }
+        });
+        fileMenu.add(saveToPGN);
 
         final JMenuItem exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.addActionListener(new ActionListener() {
@@ -233,6 +274,38 @@ public class Table extends Observable {
         });
         fileMenu.add(exitMenuItem);
         return fileMenu;
+    }
+
+    private static void savePGNFile(final File pgnFile) {
+        try{
+            writeGameToPGNFile(pgnFile, Table.get().getMoveLog());
+        } catch (final IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private static void loadPGNFile(File pgnFile){
+        try {
+            persistPGNFile(pgnFile);
+        } catch (final IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void persistPGNFile(final File pgnFile) throws IOException {
+        System.out.println("PGN file import not implemented yet!");
+    }
+
+    private void clearBoard() {
+        for (int i = Table.get().getMoveLog().size() - 1; i >= 0; i--){
+            final Move lastMove = Table.get().getMoveLog().removeMove(Table.get().getMoveLog().size() - 1);
+            this.chessBoard = this.chessBoard.currentPlayer().unMakeMove(lastMove).getToBoard();
+        }
+        this.computerMove = null;
+        Table.get().getMoveLog().clear();
+        Table.get().getGameHistoryPanel().redo(chessBoard, Table.get().getMoveLog());
+        Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
+        Table.get().getBoardPanel().drawBoard(chessBoard);
     }
 
     private JMenu createPreferencesMenu(){

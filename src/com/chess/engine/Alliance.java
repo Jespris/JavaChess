@@ -66,6 +66,11 @@ public enum Alliance {
         public int kingBonus(final int position) {
             return WHITE_KING_PREFERRED_COORDINATES[position];
         }
+
+        @Override
+        public Alliance oppositeAlliance() {
+            return BLACK;
+        }
     },
     BLACK() {
         @Override
@@ -127,6 +132,11 @@ public enum Alliance {
         public int kingBonus(final int position) {
             return BLACK_KING_PREFERRED_COORDINATES[position];
         }
+
+        @Override
+        public Alliance oppositeAlliance() {
+            return WHITE;
+        }
     };
 
     public abstract int getDirection();
@@ -146,6 +156,7 @@ public enum Alliance {
 
     public abstract int kingBonus(int position);
 
+    public abstract Alliance oppositeAlliance();
 
     public abstract boolean isPawnPromotionSquare(int position);
 
