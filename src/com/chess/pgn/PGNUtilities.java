@@ -1,6 +1,6 @@
 package com.chess.pgn;
 
-import com.chess.engine.board.Move;
+import com.chess.engine.classic.board.Move;
 import com.chess.gui.Table;
 
 import java.io.*;

@@ -1,13 +1,13 @@
 package com.tests.chess.engine.board;
 
-import com.chess.engine.board.Board;
-import com.chess.engine.board.BoardUtils;
-import com.chess.engine.board.Move;
-import com.chess.engine.board.Move.MoveFactory;
-import com.chess.engine.player.MoveTransition;
-import com.chess.engine.player.ai.AlphaBetaWithMoveSorting;
-import com.chess.engine.player.ai.MiniMax;
-import com.chess.engine.player.ai.MoveStrategy;
+import com.chess.engine.classic.board.Board;
+import com.chess.engine.classic.board.BoardUtils;
+import com.chess.engine.classic.board.Move;
+import com.chess.engine.classic.board.Move.MoveFactory;
+import com.chess.engine.classic.player.MoveTransition;
+import com.chess.engine.classic.player.ai.AlphaBetaWithMoveSorting;
+import com.chess.engine.classic.player.ai.MiniMax;
+import com.chess.engine.classic.player.ai.MoveStrategy;
 import com.chess.pgn.FenUtilities;
 import org.junit.Test;
 

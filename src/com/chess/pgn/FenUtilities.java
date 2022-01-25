@@ -1,10 +1,10 @@
 package com.chess.pgn;
 
-import com.chess.engine.Alliance;
-import com.chess.engine.board.Board;
-import com.chess.engine.board.Board.Builder;
-import com.chess.engine.board.BoardUtils;
-import com.chess.engine.pieces.*;
+import com.chess.engine.classic.Alliance;
+import com.chess.engine.classic.board.Board;
+import com.chess.engine.classic.board.Board.Builder;
+import com.chess.engine.classic.board.BoardUtils;
+import com.chess.engine.classic.pieces.*;
 
 import java.util.Objects;
 

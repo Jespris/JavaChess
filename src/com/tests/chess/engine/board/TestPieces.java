@@ -1,11 +1,11 @@
 package com.tests.chess.engine.board;
 
-import com.chess.engine.Alliance;
-import com.chess.engine.board.Board;
-import com.chess.engine.board.BoardUtils;
-import com.chess.engine.board.Move;
-import com.chess.engine.pieces.*;
-import com.chess.engine.player.MoveTransition;
+import com.chess.engine.classic.Alliance;
+import com.chess.engine.classic.board.Board;
+import com.chess.engine.classic.board.BoardUtils;
+import com.chess.engine.classic.board.Move;
+import com.chess.engine.classic.pieces.*;
+import com.chess.engine.classic.player.MoveTransition;
 import com.google.common.collect.Sets;
 import org.junit.Assert;
 import org.junit.Test;
